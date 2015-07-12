@@ -25,8 +25,8 @@ class ControlUnit(object):
 
         @property
         def pit(self):
-            # TODO: set or array?
-            return (ord(self[11]) & 0xf) | ((ord(self[12]) & 0xf) << 4)
+            mask = (ord(self[11]) & 0xf) | ((ord(self[12]) & 0xf) << 4)
+            return tuple(map(lambda n: mask & (1 << n) != 0, range(0, 8)))
 
         def __repr__(self):
             return '%s(fuel=%r, start=%d, mode=%d, pit=%r)' % (
@@ -52,7 +52,7 @@ class ControlUnit(object):
             return time
 
         @property
-        def timer(self):
+        def sector(self):
             return ord(self[1]) & 0xf
 
         def __repr__(self):
@@ -100,8 +100,7 @@ class ControlUnit(object):
         self.command(17, 7, (lap >> 4) & 0x0f)
         self.command(18, 7, lap & 0x0f)
 
-    # TODO: or clearpos? or clear()
-    def clearlap(self):
+    def clearpos(self):
         self.command(6, 0, 9)
 
     def close(self):
