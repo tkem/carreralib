@@ -1,12 +1,13 @@
-import os.path, codecs, re
+import codecs
+import os.path
+import re
 
 from setuptools import setup
 
+initpath = os.path.join(os.path.dirname(__file__), 'carreralib', '__init__.py')
 
-with codecs.open(os.path.join(os.path.dirname(__file__), 'carreralib', '__init__.py'),
-                 encoding='utf8') as f:
+with codecs.open(initpath, encoding='utf8') as f:
     metadata = dict(re.findall(r"__([a-z]+)__ = '([^']+)", f.read()))
-
 
 setup(
     name='carreralib',
@@ -15,20 +16,25 @@ setup(
     author_email='tkemmer@computer.org',
     url='https://github.com/tkem/carreralib',
     license='MIT',
-    description='Python library for communication with Carrera Digital 124/132 Control Unit',
+    description='Python interface to Carrera Digital 124/132 slotcar systems',
     long_description=open('README.rst').read(),
     keywords='carrera digital control unit slotcar',
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 3 - Alpha',
         'Environment :: Other Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
+        'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
+    install_requires=['pyserial'],
     packages=['carreralib'],
     test_suite='tests'
 )

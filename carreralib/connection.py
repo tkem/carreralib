@@ -1,37 +1,50 @@
-from __future__ import absolute_import, unicode_literals
+from __future__ import absolute_import, division, unicode_literals
 
-import sys
 
-BLE_SERVICE_UUID = '39df7777-b1b4-b90b-57f1-7144ae4e4a6a'
+class ConnectionError(Exception):
+    """The base class of all connection exceptions."""
+    pass
 
-BLE_OUTPUT_UUID = '39df8888-b1b4-b90b-57f1-7144ae4e4a6a'
 
-BLE_NOTIFY_UUID = '39df9999-b1b4-b90b-57f1-7144ae4e4a6a'
+class BufferTooShort(ConnectionError):
+    """"Raised when the supplied buffer is too small a message."""
+    pass
 
-SERIAL_BAUDRATE = 19200
+
+class TimeoutError(ConnectionError):
+    """Raised when a timeout expires."""
+    pass
 
 
 class Connection(object):
+    """Base class for connections to a Carrera digital slotcar
+    system."""
 
-    def __init__(self, url, timeout=None):
+    def __init__(self, device, **kwargs):
         pass
-
-    def send(self, data):
-        raise NotImplementedError
-
-    def recv(self, bufsize):
-        raise NotImplementedError
 
     def close(self):
+        """Close the connection."""
         pass
 
+    def recv(self, maxlength=None):
+        """Return a complete message of byte data sent from the other
+        end of the connection as a bytes object.
 
-def open(url, timeout=None):
-    if not isinstance(url, bytes):
-        url = url.encode(sys.getfilesystemencoding())
-    if len(url.split(b':')) == 6:
+        """
+        raise NotImplementedError
+
+    def send(self, buf, offset=0, size=None):
+        """Send byte data rom an object supporting the buffer
+        interface as a complete message."""
+        raise NotImplementedError
+
+
+def open(device, **kwargs):
+    """Open a connection to the given device."""
+    if len(device.split(':')) == 6:
         from .bluepy import BluepyConnection
-        return BluepyConnection(url, timeout)
+        return BluepyConnection(device, **kwargs)
     else:
         from .serial import SerialConnection
-        return SerialConnection(url, timeout)
+        return SerialConnection(device, **kwargs)
