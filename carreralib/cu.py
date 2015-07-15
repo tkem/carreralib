@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class ControlUnit(object):
     """Interface to a Carrera Digital 124/132 Control Unit."""
 
-    class Status(namedtuple('Status', 'fuel start mode pit')):
+    class Status(namedtuple('Status', 'fuel start mode pit display')):
 
         __slots__ = ()
 
@@ -40,30 +40,45 @@ class ControlUnit(object):
 
     def clrpos(self):
         """Clear all position information."""
-        self.__setword(6, 0, 9)
+        self.setword(6, 0, 9)
 
-    def poll(self):
-        """Poll CU for lap times or status information."""
-        data = self.request(b'?')
-        if data.startswith(b'?:'):
-            parts = protocol.unpack('2x8YYYBYC', data)
-            fuel, start, mode = parts[:8], parts[9], parts[10]
-            pit = (parts[11] & (1 << n) != 0 for n in range(8))
-            return ControlUnit.Status(fuel, start, mode, pit)
+    def ignore(self, mask):
+        """Ignore the controllers represented by bitmask `mask`."""
+        self.request(protocol.pack('cBC', b':', mask))
+
+    def request(self, buf=b'?', maxlength=None):
+        """Send a message to the CU and wait for a response."""
+        logger.debug('Sending message %r', buf)
+        self.__connection.send(buf)
+        while True:
+            res = self.__connection.recv(maxlength)
+            if res.startswith(buf[0:1]):
+                break
+            else:
+                logger.warn('Received unexpected message %r', res)
+        logger.debug('Received message %r', res)
+        if res.startswith(b'?:'):
+            parts = protocol.unpack('2x8YYYBYC', res)
+            fuel, (start, mode, pitmask, display) = parts[:8], parts[8:]
+            pit = tuple(pitmask & (1 << n) != 0 for n in range(8))
+            return ControlUnit.Status(fuel, start, mode, pit, display)
+        elif res.startswith(b'?'):
+            address, timestamp, sector = protocol.unpack('xYIYC', res)
+            return ControlUnit.Timer(address - 1, timestamp, sector)
         else:
-            return ControlUnit.Timer(protocol.unpack('xYIYC', data))
+            return res
 
     def reset(self):
-        """Reset the Control Unit's timer."""
-        self.__request(b'=10')
+        """Reset the CU timer."""
+        self.request(b'=10')
 
     def setbrake(self, address, value):
-        """Set the brake value for controller address."""
-        self.__setword(1, address, value, repeat=2)
+        """Set the brake value for controller `address`."""
+        self.setword(1, address, value, repeat=2)
 
     def setfuel(self, address, value):
-        """Set the fuel value for controller address."""
-        self.__setword(2, address, value, repeat=2)
+        """Set the fuel value for controller `address`."""
+        self.setword(2, address, value, repeat=2)
 
     def setlap(self, value):
         """Set the current lap."""
@@ -74,43 +89,23 @@ class ControlUnit(object):
 
     def setlap_hi(self, value):
         """Set the high nibble of the current lap."""
-        self.__setword(17, 7, value)
+        self.setword(17, 7, value)
 
     def setlap_lo(self, value):
         """Set the low nibble of the current lap."""
-        self.__setword(18, 7, value)
+        self.setword(18, 7, value)
 
     def setpos(self, address, position):
         """Set the current position for controller address."""
         if position < 1 or position > 8:
             raise ValueError('Position out of range')
-        self.__setword(6, address, position)
+        self.setword(6, address, position)
 
     def setspeed(self, address, value):
         """Set the speed value for controller address."""
-        self.__setword(0, address, value, repeat=2)
+        self.setword(0, address, value, repeat=2)
 
-    def start(self):
-        """Initiate start sequence."""
-        self.__request(b'T2')
-
-    def version(self):
-        """Retrieve CU version."""
-        return str(protocol.unpack('x4sC', self.__request(b'0'))[0])
-
-    def __request(self, buf, maxlength=None):
-        logger.debug('Sending message %r', buf)
-        self.connection.send(buf)
-        while True:
-            res = self.__connection.recv(maxlength)
-            if res.startswith(buf[0:1]):
-                break
-            else:
-                logger.warn('Received unexpected message %r', res)
-        logger.debug('Received message %r', res)
-        return res
-
-    def __setword(self, word, address, value, repeat=1):
+    def setword(self, word, address, value, repeat=1):
         if word < 0 or word > 31:
             raise ValueError('Command word out of range')
         if address < 0 or address > 7:
@@ -119,5 +114,13 @@ class ControlUnit(object):
             raise ValueError('Value out of range')
         if repeat < 1 or repeat > 15:
             raise ValueError('Repeat count out of range')
-        buf = protocol.pack('cBYYC', word | (address << 5), value, repeat)
-        return self.__request(buf)
+        buf = protocol.pack('cBYYC', b'J', word | address << 5, value, repeat)
+        return self.request(buf)
+
+    def start(self):
+        """Initiate CU start sequence."""
+        self.request(b'T2')
+
+    def version(self):
+        """Retrieve CU version."""
+        return protocol.unpack('x4sC', self.request(b'0'))[0]

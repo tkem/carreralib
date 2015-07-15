@@ -1,5 +1,3 @@
-"""Carrera Digital protocol helpers."""
-
 from __future__ import absolute_import, division, unicode_literals
 
 import re
@@ -11,11 +9,12 @@ class ProtocolError(Exception):
 
 
 class ChecksumError(Exception):
-    """"Raised when a checksum is wrong."""
+    """Raised when a checksum is wrong."""
     pass
 
 
 def chksum(buf, offset=0, size=None):
+    """Compute the protocol checksum for the buffer `buf`."""
     n = len(buf)
     if offset < 0:
         raise ValueError("offset is negative")
@@ -31,6 +30,10 @@ def chksum(buf, offset=0, size=None):
 
 
 def pack(fmt, *args):
+    """Return a bytes object containing the arguments packed according to
+    the format string `fmt.`
+
+    """
     buf = bytearray()
     argiter = iter(args)
     for match in re.finditer(_FORMAT_RE, fmt):
@@ -48,6 +51,9 @@ def pack(fmt, *args):
 
 
 def unpack(fmt, buf):
+    """Unpack from the buffer `buf` according to the format string `fmt`.
+
+    """
     offset = 0
     result = []
     values = memoryview(buf).tolist()

@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import argparse
 import contextlib
+import curses
 import errno
 import logging
 import select
@@ -11,10 +12,12 @@ from . import ControlUnit
 
 
 def posgetter(driver):
-    return (-len(driver.laps), driver.laps[-1].time)
+    return (-driver.laps, driver.time)
 
 
 def formattime(time, longfmt=False):
+    if time is None:
+        return 'n/a'
     s = time // 1000
     ms = time % 1000
 
@@ -26,56 +29,52 @@ def formattime(time, longfmt=False):
         return '%d:%02d:%02d.%03d' % (s // 3600, (s // 60) % 60, s % 60, ms)
 
 
-class CursesRMS(object):
+class RMS(object):
 
     HEADER = 'Pos No         Time  Lap time  Best lap Laps Pit Fuel'
     FORMAT = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
               '{laps:>5}{pits:>4}{fuel:>5.0%}')
-    FOOTER = ' * * * * * Press space to start/pause, r for reset, q to quit'
+    FOOTER = ' * * * * *  Press SPACE to start/pause, R for reset, Q to quit'
 
     class Driver(object):
         def __init__(self, num):
             self.num = num
-            self.fuel = 0
-            self.laps = []
-            self.pit = False
+            self.time = None
+            self.laptime = None
+            self.bestlap = None
+            self.laps = 0
             self.pits = 0
+            self.fuel = 0
+            self.pit = False
 
-        def laptime(self):
-            if len(self.laps) > 1:
-                return self.laps[-1].time - self.laps[-2].time
-            else:
-                return 0
-
-        def bestlap(self):
-            if len(self.laps) > 1:
-                laps = zip(self.laps[:-1], self.laps[1:])
-                return min(map(lambda t: t[1].time - t[0].time, laps))
-            else:
-                return 0
+        def newlap(self, timer):
+            if self.time is not None:
+                self.laptime = timer.timestamp - self.time
+                if self.bestlap is None or self.laptime < self.bestlap:
+                    self.bestlap = self.laptime
+                self.laps += 1
+            self.time = timer.timestamp
 
     def __init__(self, cu, window):
         self.cu = cu
         self.window = window
+        self.titleattr = curses.A_STANDOUT
+        self.lightattr = curses.color_pair(1)
         self.reset()
 
-        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-        self.lightattr = curses.color_pair(1)
-
     def reset(self):
-        # discard remaining laps
-        status = self.cu.status()
+        self.drivers = [self.Driver(num) for num in range(1, 9)]
+        self.maxlaps = 0
+        self.start = None
+        # discard remaining timer messages
+        status = self.cu.request()
         while not isinstance(status, ControlUnit.Status):
-            status = self.cu.status()
+            status = self.cu.request()
         self.status = status
         # reset cu timer
         self.cu.reset()
         # reset position tower
-        self.cu.clearpos()
-        # reset driver info
-        self.drivers = list(map(self.Driver, range(1, 9)))
-        self.laps = 0
-        self.start = None
+        self.cu.clrpos()
 
     def run(self):
         self.window.nodelay(1)
@@ -90,13 +89,14 @@ class CursesRMS(object):
                     self.reset()
                 elif c == ord(' '):
                     self.cu.start()
-                data = self.cu.status()
+                data = self.cu.request()
+                # prevent count duplicate laps
                 if data == last:
                     continue
-                elif isinstance(data, ControlUnit.Lap):
-                    self.handle_lap(data)
                 elif isinstance(data, ControlUnit.Status):
                     self.handle_status(data)
+                elif isinstance(data, ControlUnit.Timer):
+                    self.handle_timer(data)
                 else:
                     pass
                 last = data
@@ -106,76 +106,81 @@ class CursesRMS(object):
                 if e.errno != errno.EINTR:
                     raise
 
-    def handle_lap(self, lap):
-        if self.start is None:
-            self.start = lap.time
-        driver = self.drivers[lap.car - 1]
-        if self.laps < len(driver.laps):
-            self.laps = len(driver.laps)
-            self.cu.setlap(self.laps)
-        driver.laps.append(lap)
-
     def handle_status(self, status):
         for driver, fuel in zip(self.drivers, status.fuel):
             driver.fuel = fuel
         for driver, pit in zip(self.drivers, status.pit):
-            if driver.pit < pit:
+            if pit and not driver.pit:
                 driver.pits += 1
             driver.pit = pit
         self.status = status
 
-    def update(self):
+    def handle_timer(self, timer):
+        driver = self.drivers[timer.address]
+        driver.newlap(timer)
+        if self.maxlaps < driver.laps:
+            self.maxlaps = driver.laps
+            # position tower only handles 250 laps
+            self.cu.setlap(self.maxlaps % 250)
+        if self.start is None:
+            self.start = timer.timestamp
+
+    def update(self, blink=lambda: (time.time() * 2) % 2 == 0):
         window = self.window
+        window.clear()
         nlines, ncols = window.getmaxyx()
-        window.erase()
-        window.addstr(0, 0, self.HEADER.ljust(ncols), curses.A_STANDOUT)
-        window.addstr(nlines - 1, 0, self.FOOTER)
-        window.move(nlines - 1, 0)
+        window.addnstr(0, 0, self.HEADER.ljust(ncols), ncols, self.titleattr)
+        window.addnstr(nlines - 1, 0, self.FOOTER, ncols - 1)
 
         start = self.status.start
         if start == 0 or start == 7:
             pass
         elif start == 1:
-            window.chgat(2 * 5, self.lightattr)
+            window.chgat(nlines - 1, 0, 2 * 5, self.lightattr)
         elif start < 7:
-            window.chgat(2 * (start - 1), self.lightattr)
-        elif int(time.time() * 2) % 2 == 0:  # "manual" blinking
-            window.chgat(2 * 5, self.lightattr)
+            window.chgat(nlines - 1, 0, 2 * (start - 1), self.lightattr)
+        elif int(time.time() * 2) % 2 == 0:  # A_BLINK may not be supported
+            window.chgat(nlines - 1, 0, 2 * 5, self.lightattr)
 
-        drivers = [driver for driver in self.drivers if driver.laps]
+        drivers = [driver for driver in self.drivers if driver.time]
         for pos, driver in enumerate(sorted(drivers, key=posgetter), start=1):
             if pos == 1:
                 leader = driver
-                t = formattime(driver.laps[-1].time - self.start, True)
-            elif len(driver.laps) == len(leader.laps):
-                gap = driver.laps[-1].time - leader.laps[-1].time
-                t = '+%ss' % formattime(gap)
+                t = formattime(driver.time - self.start, True)
+            elif driver.laps == leader.laps:
+                t = '+%ss' % formattime(driver.time - leader.time)
             else:
-                gap = len(leader.laps) - len(driver.laps)
+                gap = leader.laps - driver.laps
                 t = '+%d Lap%s' % (gap, 's' if gap != 1 else '')
-            window.addstr(pos, 0, self.FORMAT.format(
-                pos=pos, car=driver.num, time=t, laps=len(driver.laps)-1,
-                laptime=formattime(driver.laptime()),
-                bestlap=formattime(driver.bestlap()),
-                fuel=driver.fuel/15.0, pits=driver.pits
-            ))
+            window.addnstr(pos, 0, self.FORMAT.format(
+                pos=pos, car=driver.num, time=t, laps=driver.laps,
+                laptime=formattime(driver.laptime),
+                bestlap=formattime(driver.bestlap),
+                fuel=driver.fuel/15.0,
+                pits=driver.pits
+            ), ncols)
         window.refresh()
 
 parser = argparse.ArgumentParser(prog='python -m carreralib')
 parser.add_argument('device', metavar='DEVICE')
-parser.add_argument('-t', '--timeout', default=1.0)
+parser.add_argument('-l', '--logfile', default='carreralib.log')
+parser.add_argument('-t', '--timeout', default=1.0, type=float)
 parser.add_argument('-v', '--verbose', action='store_true')
 args = parser.parse_args()
 
-logging.basicConfig(level=logging.DEBUG if args.verbose else logging.WARN)
+logging.basicConfig(level=logging.DEBUG if args.verbose else logging.WARN,
+                    filename=args.logfile,
+                    fmt='%(asctime)s: %(message)s')
 
 with contextlib.closing(ControlUnit(args.device, timeout=args.timeout)) as cu:
-    def run(win, args):
+    print('CU version %s' % cu.version())
+
+    def run(win):
         curses.curs_set(0)
-        rms = CursesRMS(cu, win)
+        curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+        rms = RMS(cu, win)
         rms.run()
     try:
-        import curses
-        curses.wrapper(run, args)
+        curses.wrapper(run)
     except KeyboardInterrupt:
         pass

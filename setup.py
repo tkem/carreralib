@@ -16,9 +16,9 @@ setup(
     author_email='tkemmer@computer.org',
     url='https://github.com/tkem/carreralib',
     license='MIT',
-    description='Python interface to Carrera Digital 124/132 slotcar systems',
+    description='Python interface to Carrera(R) DIGITAL 124/132 slotcar systems',  # noqa
     long_description=open('README.rst').read(),
-    keywords='carrera digital control unit slotcar',
+    keywords='carrera digital slotcar control unit cu',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Other Environment',

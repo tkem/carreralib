@@ -1,4 +1,4 @@
-"""Python interface to Carrera Digital 124/132 slotcar systems."""
+"""Python interface to Carrera(R) DIGITAL 124/132 slotcar systems."""
 
 from __future__ import absolute_import, division, unicode_literals
 
