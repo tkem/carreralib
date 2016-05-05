@@ -24,13 +24,10 @@ class BluepyDelegate(btle.DefaultDelegate):
         # BLE notifications ending with '$' do not start with command letter
         if not data.endswith(b'$'):
             self.__sequence.append(data)
-        elif len(data) == 16 or len(data) == 12:
-            self.__sequence.append(b'?' + data[:-1])
         elif len(data) == 6:
             self.__sequence.append(b'0' + data[:-1])
         else:
-            logger.warn('Received unexpected notification %r', data)
-            self.__sequence.append(data[:-1])
+            self.__sequence.append(b'?' + data[:-1])
 
 
 class BluepyConnection(Connection):

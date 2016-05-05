@@ -58,7 +58,11 @@ class ControlUnit(object):
                 logger.warn('Received unexpected message %r', res)
         logger.debug('Received message %r', res)
         if res.startswith(b'?:'):
-            parts = protocol.unpack('2x8YYYBYC', res)
+            # recent CU versions report two extra unknown bytes with '?:'
+            try:
+                parts = protocol.unpack('2x8YYYBYC', res)
+            except protocol.ChecksumError:
+                parts = protocol.unpack('2x8YYYBYxxC', res)
             fuel, (start, mode, pitmask, display) = parts[:8], parts[8:]
             pit = tuple(pitmask & (1 << n) != 0 for n in range(8))
             return ControlUnit.Status(fuel, start, mode, pit, display)
