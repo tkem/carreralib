@@ -34,7 +34,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
-    install_requires=['pyserial'],
+    install_requires=['bluepy', 'pyserial'],
     packages=['carreralib'],
     test_suite='tests'
 )
