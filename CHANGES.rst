@@ -1,3 +1,11 @@
+0.3.0 2016-05-05
+----------------
+
+- Add ``bluepy`` dependency.
+
+- Add workaround for changed ``?:`` format.
+
+
 0.2.0 2015-07-17
 ----------------
 
