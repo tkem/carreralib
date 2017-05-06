@@ -34,7 +34,7 @@ class RMS(object):
     HEADER = 'Pos No         Time  Lap time  Best lap Laps Pit Fuel'
     FORMAT = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
               '{laps:>5}{pits:>4}{fuel:>5.0%}')
-    FOOTER = ' * * * * *  Press SPACE to start/pause, R for reset, Q to quit'
+    FOOTER = ' * * * * *  SPACE to start/pause, ESC or [P]ace car, [R]eset, [S]peed, [B]rake, [F]uel, [C]ode, [Q]uit'
 
     class Driver(object):
         def __init__(self, num):
@@ -89,6 +89,16 @@ class RMS(object):
                     self.reset()
                 elif c == ord(' '):
                     self.cu.start()
+                elif (c == 27 or c == ord('p')):
+                    self.cu.request(b'T1')
+                elif c == ord('s'):
+                    self.cu.request(b'T5')
+                elif c == ord('b'):
+                    self.cu.request(b'T6')
+                elif c == ord('f'):
+                    self.cu.request(b'T7')
+                elif c == ord('c'):
+                    self.cu.request(b'T8')
                 data = self.cu.request()
                 # prevent count duplicate laps
                 if data == last:
