@@ -53,10 +53,6 @@ Project Resources
    :target: https://pypi.python.org/pypi/carreralib/
    :alt: Latest PyPI version
 
-.. image:: http://img.shields.io/pypi/dm/carreralib.svg?style=flat
-   :target: https://pypi.python.org/pypi/carreralib/
-   :alt: Number of PyPI downloads
-
 .. image:: http://img.shields.io/travis/tkem/carreralib/master.svg?style=flat
     :target: https://travis-ci.org/tkem/carreralib/
     :alt: Travis CI build status

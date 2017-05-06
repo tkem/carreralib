@@ -34,7 +34,8 @@ class RMS(object):
     HEADER = 'Pos No         Time  Lap time  Best lap Laps Pit Fuel'
     FORMAT = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
               '{laps:>5}{pits:>4}{fuel:>5.0%}')
-    FOOTER = ' * * * * *  SPACE to start/pause, ESC or [P]ace car, [R]eset, [S]peed, [B]rake, [F]uel, [C]ode, [Q]uit'
+    FOOTER1 = ' * * * * *  SPACE to start/pause, ESC or [P]ace car'
+    FOOTER2 = ' [R]eset, [S]peed, [B]rake, [F]uel, [C]ode, [Q]uit'
 
     class Driver(object):
         def __init__(self, num):
@@ -140,17 +141,18 @@ class RMS(object):
         window.clear()
         nlines, ncols = window.getmaxyx()
         window.addnstr(0, 0, self.HEADER.ljust(ncols), ncols, self.titleattr)
-        window.addnstr(nlines - 1, 0, self.FOOTER, ncols - 1)
+        window.addnstr(nlines - 2, 0, self.FOOTER1, ncols - 1)
+        window.addnstr(nlines - 1, 0, self.FOOTER2, ncols - 1)
 
         start = self.status.start
         if start == 0 or start == 7:
             pass
         elif start == 1:
-            window.chgat(nlines - 1, 0, 2 * 5, self.lightattr)
+            window.chgat(nlines - 2, 0, 2 * 5, self.lightattr)
         elif start < 7:
-            window.chgat(nlines - 1, 0, 2 * (start - 1), self.lightattr)
+            window.chgat(nlines - 2, 0, 2 * (start - 1), self.lightattr)
         elif int(time.time() * 2) % 2 == 0:  # A_BLINK may not be supported
-            window.chgat(nlines - 1, 0, 2 * 5, self.lightattr)
+            window.chgat(nlines - 2, 0, 2 * 5, self.lightattr)
 
         drivers = [driver for driver in self.drivers if driver.time]
         for pos, driver in enumerate(sorted(drivers, key=posgetter), start=1):
