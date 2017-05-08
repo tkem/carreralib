@@ -7,7 +7,7 @@ class ConnectionError(Exception):
 
 
 class BufferTooShort(ConnectionError):
-    """"Raised when the supplied buffer is too small a message."""
+    """Raised when the supplied buffer is too small a message."""
     pass
 
 

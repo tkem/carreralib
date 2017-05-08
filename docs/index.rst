@@ -55,7 +55,7 @@ Carrera AppConnect® adapter’s device address::
 
 Then run::
 
-  python -m carreralib D4:8B:C6:FC:D8:07
+  python -m carreralib "D4:8B:C6:FC:D8:07"
 
 Within the RMS, use the space key to start or pause a race, ``R`` to
 reset a race, and ``Q`` to quit.

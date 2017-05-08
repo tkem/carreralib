@@ -30,6 +30,11 @@ a Bluetooth Low Energy compatible device, and bluepy_ installed, which
 is only available for Linux. A serial connection should work on all
 platforms supported by pySerial_.
 
+For demonstration purposes, the ``carreralib`` module can also be used
+from the command line as a simple race management system (RMS).
+
+Please refer to the online documentation_ for more information.
+
 
 Installation
 ------------------------------------------------------------------------
@@ -37,13 +42,6 @@ Installation
 Install carreralib using pip::
 
     pip install carreralib
-
-
-Demo RMS
-------------------------------------------------------------------------
-
-For demonstration purposes, the ``carreralib`` module can also be used
-from the command line as a simple `race management system`_ (RMS).
 
 
 Project Resources
@@ -61,7 +59,10 @@ Project Resources
    :target: https://coveralls.io/r/tkem/carreralib
    :alt: Test coverage
 
-- `Documentation`_
+.. image:: https://readthedocs.org/projects/carreralib/badge/?version=latest&style=flat
+   :target: http://carreralib.readthedocs.io/en/latest/
+   :alt: Documentation Status
+
 - `Issue Tracker`_
 - `Source Code`_
 - `Change Log`_
@@ -70,7 +71,7 @@ Project Resources
 License
 ------------------------------------------------------------------------
 
-Copyright (c) 2015, 2016 Thomas Kemmer.
+Copyright (c) 2015-2017 Thomas Kemmer.
 
 Licensed under the `MIT License`_.
 
@@ -83,9 +84,7 @@ Thanks to Stephan Heß (a.k.a. slotbaer_) for doing all the hard work.
 .. _bluepy: https://github.com/IanHarvey/bluepy
 .. _pyserial: http://pythonhosted.org/pyserial/
 
-.. _race management system: http://pythonhosted.org/carreralib/#demo-rms
-
-.. _Documentation: http://pythonhosted.org/carreralib/
+.. _Documentation: http://carreralib.readthedocs.io/en/latest/
 .. _Issue Tracker: https://github.com/tkem/carreralib/issues/
 .. _Source Code: https://github.com/tkem/carreralib/
 .. _Change Log: https://github.com/tkem/carreralib/blob/master/CHANGES.rst

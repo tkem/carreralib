@@ -1,24 +1,25 @@
-import codecs
-import os.path
-import re
+from setuptools import find_packages, setup
 
-from setuptools import setup
 
-initpath = os.path.join(os.path.dirname(__file__), 'carreralib', '__init__.py')
+def get_version(filename):
+    from re import findall
+    with open(filename) as f:
+        metadata = dict(findall("__([a-z]+)__ = '([^']+)'", f.read()))
+    return metadata['version']
 
-with codecs.open(initpath, encoding='utf8') as f:
-    metadata = dict(re.findall(r"__([a-z]+)__ = '([^']+)", f.read()))
 
 setup(
     name='carreralib',
-    version=metadata['version'],
-    author='Thomas Kemmer',
-    author_email='tkemmer@computer.org',
+    version=get_version('carreralib/__init__.py'),
     url='https://github.com/tkem/carreralib',
     license='MIT',
+    author='Thomas Kemmer',
+    author_email='tkemmer@computer.org',
     description='Python interface to Carrera(R) DIGITAL 124/132 slotcar systems',  # noqa
     long_description=open('README.rst').read(),
     keywords='carrera digital slotcar control unit cu',
+    packages=find_packages(exclude=['tests', 'tests.*']),
+    install_requires=['bluepy', 'pyserial'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Other Environment',
@@ -33,8 +34,5 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Libraries :: Python Modules'
-    ],
-    install_requires=['bluepy', 'pyserial'],
-    packages=['carreralib'],
-    test_suite='tests'
+    ]
 )

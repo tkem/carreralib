@@ -173,6 +173,7 @@ class RMS(object):
             ), ncols)
         window.refresh()
 
+
 parser = argparse.ArgumentParser(prog='python -m carreralib')
 parser.add_argument('device', metavar='DEVICE')
 parser.add_argument('-l', '--logfile', default='carreralib.log')
