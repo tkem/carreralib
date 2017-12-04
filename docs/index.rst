@@ -9,7 +9,7 @@ slotcar systems connected via serial port or Bluetooth.
 .. code-block:: pycon
 
    >>> from carreralib import ControlUnit
-   >>> cu = ControlUnit('D4:8B:C6:FC:D8:07')
+   >>> cu = ControlUnit('/dev/ttyUSB0')
    >>> cu.version()
    b'5331'
    >>> cu.request()

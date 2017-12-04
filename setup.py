@@ -19,7 +19,7 @@ setup(
     long_description=open('README.rst').read(),
     keywords='carrera digital slotcar control unit cu',
     packages=find_packages(exclude=['tests', 'tests.*']),
-    install_requires=['bluepy', 'pyserial'],
+    install_requires=['pyserial'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Other Environment',
