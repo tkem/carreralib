@@ -1,3 +1,15 @@
+0.5.0 2017-12-04
+----------------
+
+- Remove ``bluepy`` dependency.
+
+- Move documentation to RTD.
+
+- Add Python 3.6 support.
+
+- Drop Python 3.3 support.
+
+
 0.4.1 2017-05-06
 ----------------
 
