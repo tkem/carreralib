@@ -32,10 +32,16 @@ def formattime(time, longfmt=False):
 class RMS(object):
 
     HEADER = 'Pos No         Time  Lap time  Best lap Laps Pit Fuel'
-    FORMAT = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
-              '{laps:>5}{pits:>4}{fuel:>5.0%}')
-    FOOTER1 = ' * * * * *  SPACE to start/pause, ESC or [P]ace car'
+    FORMAT1 = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
+               '{laps:>5}{pits:>4}{fuel:>5.0%}')
+    FORMAT2 = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
+               '{laps:>5} n/a  n/a')
+    FOOTER1 = ' * * * * *  SPACE to start/pause, ESC for pace car'
     FOOTER2 = ' [R]eset, [S]peed, [B]rake, [F]uel, [C]ode, [Q]uit'
+
+    # CU reports zero fuel for all cars unless pit lane adapter is connected
+    # FUEL_MASK = ControlUnit.Status.FUEL_MODE | ControlUnit.Status.REAL_MODE
+    FUEL_MASK = ControlUnit.Status.PIT_LANE_MODE
 
     class Driver(object):
         def __init__(self, num):
@@ -90,7 +96,7 @@ class RMS(object):
                     self.reset()
                 elif c == ord(' '):
                     self.cu.start()
-                elif (c == 27 or c == ord('p')):
+                elif (c == 27):  # ESC
                     self.cu.request(b'T1')
                 elif c == ord('s'):
                     self.cu.request(b'T5')
@@ -164,13 +170,21 @@ class RMS(object):
             else:
                 gap = leader.laps - driver.laps
                 t = '+%d Lap%s' % (gap, 's' if gap != 1 else '')
-            window.addnstr(pos, 0, self.FORMAT.format(
-                pos=pos, car=driver.num, time=t, laps=driver.laps,
-                laptime=formattime(driver.laptime),
-                bestlap=formattime(driver.bestlap),
-                fuel=driver.fuel/15.0,
-                pits=driver.pits
-            ), ncols)
+            if (self.status.mode & self.FUEL_MASK) != 0:
+                text = self.FORMAT1.format(
+                    pos=pos, car=driver.num, time=t, laps=driver.laps,
+                    laptime=formattime(driver.laptime),
+                    bestlap=formattime(driver.bestlap),
+                    fuel=driver.fuel/15.0,
+                    pits=driver.pits
+                )
+            else:
+                text = self.FORMAT2.format(
+                    pos=pos, car=driver.num, time=t, laps=driver.laps,
+                    laptime=formattime(driver.laptime),
+                    bestlap=formattime(driver.bestlap)
+                )
+            window.addnstr(pos, 0, text, ncols)
         window.refresh()
 
 

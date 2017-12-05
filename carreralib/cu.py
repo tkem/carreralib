@@ -13,15 +13,59 @@ class ControlUnit(object):
     """Interface to a Carrera Digital 124/132 Control Unit."""
 
     class Status(namedtuple('Status', 'fuel start mode pit display')):
+        """Response type returned if no timer events are pending.
+
+        This is a :class:`collections.namedtuple` subclass with the
+        following read-only attributes:
+
+        +-----------------+-------+-------------------------------------------+
+        | Attribute       | Index | Value                                     |
+        +=================+=======+===========================================+
+        | :attr:`fuel`    | 0     | Eight-item list of fuel levels (0..15)    |
+        +-----------------+-------+-------------------------------------------+
+        | :attr:`start`   | 1     | Start light indicator (0..9)              |
+        +-----------------+-------+-------------------------------------------+
+        | :attr:`mode`    | 2     | 4-bit mode bit mask                       |
+        +-----------------+-------+-------------------------------------------+
+        | :attr:`pit`     | 3     | 8-bit pit lane bit mask                   |
+        +-----------------+-------+-------------------------------------------+
+        | :attr:`display` | 4     | Number of drivers to display (6 or 8)     |
+        +-----------------+-------+-------------------------------------------+
+
+        """
 
         __slots__ = ()
 
-        MODE_FUEL = 1
-        MODE_REAL = 2
-        MODE_PIT_LANE = 4
-        MODE_LAP_COUNTER = 8
+        FUEL_MODE = 0x1
+        """Mode bit mask indicating fule mode is enabled."""
+
+        REAL_MODE = 0x2
+        """Mode bit mask indicating real fuel mode is enabled."""
+
+        PIT_LANE_MODE = 0x4
+        """Mode bit mask indicating a pit lane adapter is connected."""
+
+        LAP_COUNTER_MODE = 0x8
+        """Mode bit mask indicating a lap counter is connected."""
 
     class Timer(namedtuple('Timer', 'address timestamp sector')):
+        """Response type for timer events.
+
+        This is a :class:`collections.namedtuple` subclass with the
+        following read-only attributes:
+
+        +-------------------+-------+-----------------------------------------+
+        | Attribute         | Index | Value                                   |
+        +===================+=======+=========================================+
+        | :attr:`address`   | 0     | Controller address (0..7)               |
+        +-------------------+-------+-----------------------------------------+
+        | :attr:`timestamp` | 1     | 32-bit time stamp in milleseconds       |
+        +-------------------+-------+-----------------------------------------+
+        | :attr:`sector`    | 2     | Sector (1 for start/finish, 2 or 3 for  |
+        |                   |       | times reported by Check Lanes)          |
+        +-------------------+-------+-----------------------------------------+
+
+        """
         pass
 
     def __init__(self, device, **kwargs):
@@ -38,7 +82,7 @@ class ControlUnit(object):
         self.__connection.close()
 
     def clrpos(self):
-        """Clear all position information."""
+        """Clear/reset the Position Tower display."""
         self.setword(6, 0, 9)
 
     def ignore(self, mask):
@@ -46,7 +90,13 @@ class ControlUnit(object):
         self.request(protocol.pack('cBC', b':', mask))
 
     def request(self, buf=b'?', maxlength=None):
-        """Send a message to the CU and wait for a response."""
+        """Send a message to the CU and wait for a response.
+
+        The returned value will be an instance of either
+        :class:`ControlUnit.Timer` or :class:`ControlUnit.Status`,
+        depending on whether any timer events are pending.
+
+        """
         logger.debug('Sending message %r', buf)
         self.__connection.send(buf)
         while True:
@@ -84,7 +134,7 @@ class ControlUnit(object):
         self.setword(2, address, value, repeat=2)
 
     def setlap(self, value):
-        """Set the current lap."""
+        """Set the current lap displayed by the Position Tower."""
         if value < 0 or value > 255:
             raise ValueError('Lap value out of range')
         self.setlap_hi(value >> 4)
@@ -99,7 +149,7 @@ class ControlUnit(object):
         self.setword(18, 7, value)
 
     def setpos(self, address, position):
-        """Set the current position for controller address."""
+        """Set the controller's position displayed by the Position Tower."""
         if position < 1 or position > 8:
             raise ValueError('Position out of range')
         self.setword(6, address, position)
@@ -121,9 +171,9 @@ class ControlUnit(object):
         return self.request(buf)
 
     def start(self):
-        """Initiate CU start sequence."""
+        """Initiate the CU start sequence."""
         self.request(b'T2')
 
     def version(self):
-        """Retrieve CU version."""
+        """Retrieve the CU version."""
         return protocol.unpack('x4sC', self.request(b'0'))[0]

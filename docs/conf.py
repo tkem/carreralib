@@ -1,3 +1,9 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath('..'))
+
+
 def get_version(filename):
     from re import findall
     with open(filename) as f:

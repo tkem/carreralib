@@ -78,8 +78,9 @@ autonomous car, and :const:`7` the address of the pace car.
 
    `device` should name a serial port, e.g. ``/dev/ttyUSB0`` on
    GNU/Linux or ``COM3`` on Windows, or the MAC address of the Carrera
-   AppConnect® adapter.  Additional keyword arguments will be passed
-   to the underlying :class:`Connection` object.
+   AppConnect® adapter, e.g. ``D4:8B:C6:FC:D8:07``.  Additional
+   keyword arguments will be passed to the underlying
+   :class:`Connection` object.
 
 
 Connection Module
