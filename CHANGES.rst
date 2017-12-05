@@ -30,7 +30,7 @@
 - Add CU key codes to demo application.
 
 
-  0.3.0 2016-05-05
+0.3.0 2016-05-05
 ----------------
 
 - Add ``bluepy`` dependency.
