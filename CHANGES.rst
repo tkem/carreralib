@@ -1,3 +1,11 @@
+0.6.0 2017-12-05
+----------------
+
+- Add constants for key-emulating requests.
+
+- Improve documentation.
+
+
 0.5.0 2017-12-04
 ----------------
 
