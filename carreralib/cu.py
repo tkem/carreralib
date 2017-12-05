@@ -68,6 +68,24 @@ class ControlUnit(object):
         """
         pass
 
+    PACE_CAR_KEY = b'T1'
+    """Request for emulating the Control Unit's PACE CAR/ESC key."""
+
+    START_KEY = b'T2'
+    """Request for emulating the Control Unit's START/ENTER key."""
+
+    SPEED_KEY = b'T5'
+    """Request for emulating the Control Unit's SPEED key."""
+
+    BRAKE_KEY = b'T6'
+    """Request for emulating the Control Unit's BRAKE key."""
+
+    FUEL_KEY = b'T7'
+    """Request for emulating the Control Unit's FUEL key."""
+
+    CODE_KEY = b'T8'
+    """Request for emulating the Control Unit's CODE key."""
+
     def __init__(self, device, **kwargs):
         if isinstance(device, connection.Connection):
             self.__connection = device
@@ -172,7 +190,7 @@ class ControlUnit(object):
 
     def start(self):
         """Initiate the CU start sequence."""
-        self.request(b'T2')
+        self.request(self.START_KEY)
 
     def version(self):
         """Retrieve the CU version."""

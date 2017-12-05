@@ -97,17 +97,17 @@ class RMS(object):
                 elif c == ord(' '):
                     self.cu.start()
                 elif (c == 27):  # ESC
-                    self.cu.request(b'T1')
+                    self.cu.request(ControlUnit.PACE_CAR_KEY)
                 elif c == ord('s'):
-                    self.cu.request(b'T5')
+                    self.cu.request(ControlUnit.SPEED_KEY)
                 elif c == ord('b'):
-                    self.cu.request(b'T6')
+                    self.cu.request(ControlUnit.BRAKE_KEY)
                 elif c == ord('f'):
-                    self.cu.request(b'T7')
+                    self.cu.request(ControlUnit.FUEL_KEY)
                 elif c == ord('c'):
-                    self.cu.request(b'T8')
+                    self.cu.request(ControlUnit.CODE_KEY)
                 data = self.cu.request()
-                # prevent count duplicate laps
+                # prevent counting duplicate laps
                 if data == last:
                     continue
                 elif isinstance(data, ControlUnit.Status):
@@ -115,7 +115,7 @@ class RMS(object):
                 elif isinstance(data, ControlUnit.Timer):
                     self.handle_timer(data)
                 else:
-                    pass
+                    logging.warn('Unknown data from CU: ' + data)
                 last = data
             except select.error as e:
                 pass
