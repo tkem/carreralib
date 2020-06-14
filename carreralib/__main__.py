@@ -117,7 +117,7 @@ class RMS(object):
                 else:
                     logging.warn('Unknown data from CU: ' + data)
                 last = data
-            except select.error as e:
+            except select.error:
                 pass
             except IOError as e:
                 if e.errno != errno.EINTR:
@@ -197,7 +197,7 @@ args = parser.parse_args()
 
 logging.basicConfig(level=logging.DEBUG if args.verbose else logging.WARN,
                     filename=args.logfile,
-                    fmt='%(asctime)s: %(message)s')
+                    format='%(asctime)s: %(message)s')
 
 with contextlib.closing(ControlUnit(args.device, timeout=args.timeout)) as cu:
     print('CU version %s' % cu.version())

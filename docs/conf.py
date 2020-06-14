@@ -1,19 +1,16 @@
-import os
-import sys
+def get_version():
+    import configparser
+    import pathlib
 
-sys.path.insert(0, os.path.abspath('..'))
-
-
-def get_version(filename):
-    from re import findall
-    with open(filename) as f:
-        metadata = dict(findall(r"__([a-z]+)__ = '([^']+)'", f.read()))
-    return metadata['version']
+    cp = configparser.ConfigParser()
+    # Python 3.5 ConfigParser does not accept Path as filename
+    cp.read(str(pathlib.Path(__file__).parent.parent / "setup.cfg"))
+    return cp["metadata"]["version"]
 
 
 project = 'carreralib'
-copyright = '2015-2017 Thomas Kemmer'
-version = get_version(b'../carreralib/__init__.py')
+copyright = '2015-2020 Thomas Kemmer'
+version = get_version()
 release = version
 
 extensions = [

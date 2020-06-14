@@ -1,6 +1,26 @@
 carreralib
 ========================================================================
 
+.. image:: http://img.shields.io/pypi/v/carreralib
+   :target: https://pypi.org/project/carreralib/
+   :alt: Latest PyPI version
+
+.. image:: https://img.shields.io/readthedocs/carreralib
+   :target: http://carreralib.readthedocs.io/
+   :alt: Documentation build status
+
+.. image:: http://img.shields.io/travis/tkem/carreralib
+   :target: https://travis-ci.org/tkem/carreralib/
+   :alt: Travis CI build status
+
+.. image:: http://img.shields.io/coveralls/tkem/carreralib
+   :target: https://coveralls.io/r/tkem/carreralib
+   :alt: Test coverage
+
+.. image:: https://img.shields.io/github/license/tkem/carreralib
+   :target: http://raw.github.com/tkem/carreralib/master/LICENSE
+   :alt: License
+
 This module provides a Python interface to Carrera(R) DIGITAL 124/132
 slotcar systems connected via serial port or Bluetooth.
 
@@ -39,7 +59,7 @@ Please refer to the online documentation_ for more information.
 Installation
 ------------------------------------------------------------------------
 
-Install carreralib using pip::
+carreralib is available from PyPI_ and can be installed by running::
 
     pip install carreralib
 
@@ -47,22 +67,7 @@ Install carreralib using pip::
 Project Resources
 ------------------------------------------------------------------------
 
-.. image:: http://img.shields.io/pypi/v/carreralib.svg?style=flat
-   :target: https://pypi.python.org/pypi/carreralib/
-   :alt: Latest PyPI version
-
-.. image:: http://img.shields.io/travis/tkem/carreralib/master.svg?style=flat
-    :target: https://travis-ci.org/tkem/carreralib/
-    :alt: Travis CI build status
-
-.. image:: http://img.shields.io/coveralls/tkem/carreralib/master.svg?style=flat
-   :target: https://coveralls.io/r/tkem/carreralib
-   :alt: Test coverage
-
-.. image:: https://readthedocs.org/projects/carreralib/badge/?version=latest&style=flat
-   :target: http://carreralib.readthedocs.io/en/latest/
-   :alt: Documentation Status
-
+- `Documentation`_
 - `Issue Tracker`_
 - `Source Code`_
 - `Change Log`_
@@ -71,7 +76,7 @@ Project Resources
 License
 ------------------------------------------------------------------------
 
-Copyright (c) 2015-2017 Thomas Kemmer.
+Copyright (c) 2015-2020 Thomas Kemmer.
 
 Licensed under the `MIT License`_.
 
@@ -84,6 +89,7 @@ Thanks to Stephan Heß (a.k.a. slotbaer_) for doing all the hard work.
 .. _bluepy: https://github.com/IanHarvey/bluepy
 .. _pyserial: http://pythonhosted.org/pyserial/
 
+.. _PyPI: https://pypi.org/project/carreralib/
 .. _Documentation: http://carreralib.readthedocs.io/en/latest/
 .. _Issue Tracker: https://github.com/tkem/carreralib/issues/
 .. _Source Code: https://github.com/tkem/carreralib/
