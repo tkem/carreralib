@@ -1,4 +1,4 @@
-0.7.0 UNRELEASED
+0.7.0 2020-06-14
 ----------------
 
 - Require Python 3.5 or later.
