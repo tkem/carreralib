@@ -31,11 +31,12 @@ def formattime(time, longfmt=False):
 
 class RMS(object):
 
-    HEADER = 'Pos No         Time  Lap time  Best lap Laps Pit Fuel'
-    FORMAT1 = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
-               '{laps:>5}{pits:>4}{fuel:>5.0%}')
-    FORMAT2 = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
-               '{laps:>5} n/a  n/a')
+    HEADER = ('{:<4}{:<2}{:>12}{:>14}{:>10}{:>10}{:>5}').format('Pos', 'No', 'Time', 'Sector time', 'Lap time', 'Best lap', 'Laps')
+    FORMAT = ('{pos:<4}#{car:<2}{time:>12}{sector:>14}{laptime:>10}{bestlap:>10}{laps:>5}')
+
+    HEADER_ADD_PIT = ('{:>4}{:>5}').format('Pit', 'Fuel')
+    FORMAT_ADD_PIT = ('{pits:>4}{fuel:>5.0%}')
+    
     FOOTER1 = ' * * * * *  SPACE to start/pause, ESC for pace car'
     FOOTER2 = ' [R]eset, [S]peed, [B]rake, [F]uel, [C]ode, [Q]uit'
 
@@ -47,6 +48,7 @@ class RMS(object):
         def __init__(self, num):
             self.num = num
             self.time = None
+            self.sector = None
             self.laptime = None
             self.bestlap = None
             self.laps = 0
@@ -55,12 +57,16 @@ class RMS(object):
             self.pit = False
 
         def newlap(self, timer):
-            if self.time is not None:
-                self.laptime = timer.timestamp - self.time
-                if self.bestlap is None or self.laptime < self.bestlap:
-                    self.bestlap = self.laptime
-                self.laps += 1
-            self.time = timer.timestamp
+            if timer.sector == 1:
+                if self.time is not None:
+                    self.laptime = timer.timestamp - self.time
+                    if self.bestlap is None or self.laptime < self.bestlap:
+                        self.bestlap = self.laptime
+                    self.laps += 1
+                self.time = timer.timestamp
+            elif timer.sector == 2 or timer.sector == 3:
+                if self.time is not None:
+                    self.sector = timer.timestamp - self.time
 
     def __init__(self, cu, window):
         self.cu = cu
@@ -146,7 +152,10 @@ class RMS(object):
         window = self.window
         window.clear()
         nlines, ncols = window.getmaxyx()
-        window.addnstr(0, 0, self.HEADER.ljust(ncols), ncols, self.titleattr)
+        if (self.status.mode & self.FUEL_MASK) != 0:
+            window.addnstr(0, 0, self.HEADER.join(self.HEADER_ADD_PIT).ljust(ncols), ncols, self.titleattr)
+        else:
+            window.addnstr(0, 0, self.HEADER.ljust(ncols), ncols, self.titleattr)
         window.addnstr(nlines - 2, 0, self.FOOTER1, ncols - 1)
         window.addnstr(nlines - 1, 0, self.FOOTER2, ncols - 1)
 
@@ -171,19 +180,23 @@ class RMS(object):
                 gap = leader.laps - driver.laps
                 t = '+%d Lap%s' % (gap, 's' if gap != 1 else '')
             if (self.status.mode & self.FUEL_MASK) != 0:
-                text = self.FORMAT1.format(
+                text = self.FORMAT.format(
                     pos=pos, car=driver.num, time=t, laps=driver.laps,
                     laptime=formattime(driver.laptime),
                     bestlap=formattime(driver.bestlap),
-                    fuel=driver.fuel/15.0,
-                    pits=driver.pits
-                )
+                    sector=formattime(driver.sector)).join(
+                        self.FORMAT_ADD_PIT.format(
+                            fuel=driver.fuel/15.0,
+                            pits=driver.pits
+                        )
+                    )
             else:
-                text = self.FORMAT2.format(
+                text = self.FORMAT.format(
                     pos=pos, car=driver.num, time=t, laps=driver.laps,
                     laptime=formattime(driver.laptime),
-                    bestlap=formattime(driver.bestlap)
-                )
+                    bestlap=formattime(driver.bestlap),
+                    sector=formattime(driver.sector))
+
             window.addnstr(pos, 0, text, ncols)
         window.refresh()
 
