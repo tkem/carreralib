@@ -31,7 +31,7 @@ def formattime(time, longfmt=False):
 
 class RMS(object):
 
-    HEADER = ('{:<4}{:<2}{:>12}{:>14}{:>10}{:>10}{:>5}').format('Pos', 'No', 'Time', 'Sector time', 'Lap time', 'Best lap', 'Laps')
+    HEADER = ('{:<4}{:<3}{:>12}{:>14}{:>10}{:>10}{:>5}').format('Pos', 'No', 'Time', 'Sector time', 'Lap time', 'Best lap', 'Laps')
     FORMAT = ('{pos:<4}#{car:<2}{time:>12}{sector:>14}{laptime:>10}{bestlap:>10}{laps:>5}')
 
     HEADER_ADD_PIT = ('{:>4}{:>5}').format('Pit', 'Fuel')
