@@ -1,4 +1,5 @@
 import logging
+import time
 from collections import namedtuple
 
 from . import connection
@@ -118,7 +119,10 @@ class ControlUnit(object):
         self.__connection.send(buf)
         while True:
             res = self.__connection.recv(maxlength)
-            if res.startswith(buf[0:1]):
+            if not res:
+                logger.warn("Received unknown command response")
+                break
+            elif res.startswith(buf[0:1]):
                 break
             else:
                 logger.warn("Received unexpected message %r", res)
@@ -193,4 +197,31 @@ class ControlUnit(object):
 
     def version(self):
         """Retrieve the CU version."""
-        return protocol.unpack("x4sC", self.request(b"0"))[0]
+        # TODO better error checking in other methods
+        res = self.request(b"0")
+        return protocol.unpack("x4sC", res)[0] if res else b"????"
+
+    def updatefw(self, updatefile):
+        """Update CU firmware given path to update file."""
+        self.request(protocol.pack("ccC", b"G", b"B"))
+        time.sleep(1.0)
+
+        logger.info("Firmware update started")
+
+        with open(updatefile) as file:
+            totallines = sum(1 for _ in file)
+
+        numlines = 0
+        thresh = 0.1
+        with open(updatefile) as file:
+            for line in file:
+                # remove the double quotes wrapping each line
+                line = line.rstrip().replace('"', "")
+                buf = protocol.pack(f"c{len(line)}sC", b"E", str.encode(line))
+                self.request(buf)
+                numlines += 1
+                if numlines / totallines > thresh:
+                    logger.info("Firmware update progress %d%%", int(thresh * 100))
+                    thresh += 0.1
+
+        logger.info("Firmware update complete")

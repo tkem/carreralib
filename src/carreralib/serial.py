@@ -16,7 +16,7 @@ class SerialConnection(Connection):
             c = self.__serial.read()
             if not c:
                 raise TimeoutError("Timeout waiting for serial data")
-            elif c == b"$":
+            elif c == b"$" or c == b"#":
                 break
             elif maxlength is not None and maxlength <= len(buf):
                 raise BufferTooShort("Buffer too short for data received")
