@@ -205,16 +205,15 @@ class ControlUnit(object):
     def updatefw(self, updatefile):
         """Update CU firmware given path to update file."""
         self.request(protocol.pack('ccC', b'G', b'B'))
+        time.sleep(1.0)
 
         logger.info('Firmware update started')
-
-        time.sleep(1.0)
 
         with open(updatefile) as file:
             totallines = sum(1 for _ in file)
 
-        thresh = 0.1
         numlines = 0
+        thresh = 0.1
         with open(updatefile) as file:
             for line in file:
                 # remove the double quotes wrapping each line

@@ -21,4 +21,4 @@ if __name__ == "__main__":
     with contextlib.closing(ControlUnit(args.device, timeout=args.timeout)) as cu:
         print('CU version %s' % cu.version().decode())
 
-        #cu.updatefw(args.updatefile)
+        cu.updatefw(args.updatefile)
