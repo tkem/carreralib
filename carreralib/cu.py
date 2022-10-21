@@ -69,23 +69,23 @@ class ControlUnit(object):
         """
         pass
 
-    PACE_CAR_KEY = b'T1'
-    """Request for emulating the Control Unit's PACE CAR/ESC key."""
+    PACE_CAR_KEY = 1
+    """Value for emulating the Control Unit's PACE CAR/ESC key."""
 
-    START_KEY = b'T2'
-    """Request for emulating the Control Unit's START/ENTER key."""
+    START_KEY = 2
+    """Value for emulating the Control Unit's START/ENTER key."""
 
-    SPEED_KEY = b'T5'
-    """Request for emulating the Control Unit's SPEED key."""
+    SPEED_KEY = 5
+    """Value for emulating the Control Unit's SPEED key."""
 
-    BRAKE_KEY = b'T6'
-    """Request for emulating the Control Unit's BRAKE key."""
+    BRAKE_KEY = 6
+    """Value for emulating the Control Unit's BRAKE key."""
 
-    FUEL_KEY = b'T7'
-    """Request for emulating the Control Unit's FUEL key."""
+    FUEL_KEY = 7
+    """Value for emulating the Control Unit's FUEL key."""
 
-    CODE_KEY = b'T8'
-    """Request for emulating the Control Unit's CODE key."""
+    CODE_KEY = 8
+    """Value for emulating the Control Unit's CODE key."""
 
     def __init__(self, device, **kwargs):
         if isinstance(device, connection.Connection):
@@ -116,7 +116,7 @@ class ControlUnit(object):
         depending on whether any timer events are pending.
 
         """
-        logger.debug('Sending message %r', buf)
+        #logger.debug('Sending message %r', buf)
         self.__connection.send(buf)
         while True:
             res = self.__connection.recv(maxlength)
@@ -127,7 +127,7 @@ class ControlUnit(object):
                 break
             else:
                 logger.warn('Received unexpected message %r', res)
-        logger.debug('Received message %r', res)
+        #logger.debug('Received message %r', res)
         if res.startswith(b'?:'):
             # recent CU versions report two extra unknown bytes with '?:'
             try:
@@ -145,7 +145,7 @@ class ControlUnit(object):
 
     def reset(self):
         """Reset the CU timer."""
-        self.request(b'=10')
+        self.request(protocol.pack('cYYC', b'=', 1, 0))
 
     def setbrake(self, address, value):
         """Set the brake value for controller `address`."""
@@ -190,11 +190,13 @@ class ControlUnit(object):
         if repeat < 1 or repeat > 15:
             raise ValueError('Repeat count out of range')
         buf = protocol.pack('cBYYC', b'J', word | address << 5, value, repeat)
-        return self.request(buf)
+        self.request(buf)
 
-    def start(self):
-        """Initiate the CU start sequence."""
-        self.request(self.START_KEY)
+    def presskey(self, key):
+        """Emulates a CU key press."""
+        if key < 0 or key > 15:
+            raise ValueError('Key value out of range')
+        self.request(protocol.pack('cYC', b'T', key))
 
     def version(self):
         """Retrieve the CU version."""

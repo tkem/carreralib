@@ -95,17 +95,17 @@ class RMS(object):
                 elif c == ord('r'):
                     self.reset()
                 elif c == ord(' '):
-                    self.cu.start()
+                    self.cu.presskey(ControlUnit.START_KEY)
                 elif (c == 27):  # ESC
-                    self.cu.request(ControlUnit.PACE_CAR_KEY)
+                    self.cu.presskey(ControlUnit.PACE_CAR_KEY)
                 elif c == ord('s'):
-                    self.cu.request(ControlUnit.SPEED_KEY)
+                    self.cu.presskey(ControlUnit.SPEED_KEY)
                 elif c == ord('b'):
-                    self.cu.request(ControlUnit.BRAKE_KEY)
+                    self.cu.presskey(ControlUnit.BRAKE_KEY)
                 elif c == ord('f'):
-                    self.cu.request(ControlUnit.FUEL_KEY)
+                    self.cu.presskey(ControlUnit.FUEL_KEY)
                 elif c == ord('c'):
-                    self.cu.request(ControlUnit.CODE_KEY)
+                    self.cu.presskey(ControlUnit.CODE_KEY)
                 data = self.cu.request()
                 # prevent counting duplicate laps
                 if data == last:
