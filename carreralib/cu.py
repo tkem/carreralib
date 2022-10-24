@@ -116,7 +116,8 @@ class ControlUnit(object):
         depending on whether any timer events are pending.
 
         """
-        #logger.debug('Sending message %r', buf)
+        if not buf.startswith(b'?'):
+            logger.debug('Sending message %r', buf)
         self.__connection.send(buf)
         while True:
             res = self.__connection.recv(maxlength)
@@ -127,7 +128,8 @@ class ControlUnit(object):
                 break
             else:
                 logger.warn('Received unexpected message %r', res)
-        #logger.debug('Received message %r', res)
+        if not res.startswith(b'?'):
+            logger.debug('Received message %r', res)
         if res.startswith(b'?:'):
             # recent CU versions report two extra unknown bytes with '?:'
             try:
