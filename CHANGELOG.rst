@@ -1,4 +1,4 @@
-0.8.0 UNRELEASED
+0.8.0 2022-11-08
 ----------------
 
 - Require Python 3.7 or later.
