@@ -27,7 +27,7 @@ carreralib
 
 
 This module provides a Python interface to Carrera(R) DIGITAL 124/132
-slotcar systems connected via serial port or Bluetooth.
+slotcar systems connected via a serial (cable) connection.
 
 .. code-block:: pycon
 
@@ -49,11 +49,6 @@ slotcar systems connected via serial port or Bluetooth.
    Timer(address=1, timestamp=243019, sector=1)
    >>> cu.request()
    Timer(address=0, timestamp=245704, sector=1)
-
-For Bluetooth access you will need the Carrera AppConnect(R) adapter,
-a Bluetooth Low Energy compatible device, and bluepy_ installed, which
-is only available for Linux. A serial connection should work on all
-platforms supported by pySerial_.
 
 For demonstration purposes, the ``carreralib`` module can also be used
 from the command line as a simple race management system (RMS).
@@ -85,14 +80,9 @@ Copyright (c) 2015-2022 Thomas Kemmer.
 
 Licensed under the `MIT License`_.
 
-Carrera and Carrera AppConnect are registered trademarks of Carrera
-Toys GmbH.
+Carrera is a registered trademark of Carrera Toys GmbH.
 
 Thanks to Stephan Heß (a.k.a. slotbaer_) for doing all the hard work.
-
-
-.. _bluepy: https://github.com/IanHarvey/bluepy
-.. _pyserial: http://pythonhosted.org/pyserial/
 
 .. _PyPI: https://pypi.org/project/carreralib/
 .. _Documentation: http://carreralib.readthedocs.io/en/latest/

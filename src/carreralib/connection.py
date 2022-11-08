@@ -42,11 +42,6 @@ class Connection(object):
 
 def open(device, **kwargs):
     """Open a connection to the given device."""
-    if len(device.split(":")) == 6:
-        from .bluepy import BluepyConnection
+    from .serial import SerialConnection
 
-        return BluepyConnection(device, **kwargs)
-    else:
-        from .serial import SerialConnection
-
-        return SerialConnection(device, **kwargs)
+    return SerialConnection(device, **kwargs)

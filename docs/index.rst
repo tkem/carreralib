@@ -4,7 +4,7 @@
 .. module:: carreralib
 
 This module provides a Python interface to Carrera® DIGITAL 124/132
-slotcar systems connected via serial port or Bluetooth.
+slotcar systems connected via the serial port.
 
 .. code-block:: pycon
 
@@ -27,11 +27,6 @@ slotcar systems connected via serial port or Bluetooth.
    >>> cu.request()
    Timer(address=0, timestamp=245704, sector=1)
 
-For Bluetooth access you will need the Carrera AppConnect® adapter, a
-Bluetooth Low Energy compatible device, and bluepy_ installed, which
-is only available for Linux. A serial connection should work on all
-platforms supported by pySerial_.
-
 
 Demo RMS
 ------------------------------------------------------------------------
@@ -45,17 +40,6 @@ system (RMS)::
 .. image:: rms.png
     :width: 569
     :height: 182
-
-To connect via Bluetooth, first run ``hcitool`` to discover the
-Carrera AppConnect® adapter’s device address::
-
-  $ sudo hcitool lescan
-  LE Scan ...
-  D4:8B:C6:FC:D8:07 Control_Unit
-
-Then run::
-
-  python -m carreralib "D4:8B:C6:FC:D8:07"
 
 Within the RMS, use the space key to start or pause a race, ``R`` to
 reset a race, and ``Q`` to quit.
@@ -87,8 +71,8 @@ Connection Module
 ------------------------------------------------------------------------
 
 This module is mostly of interest to developers who want to create
-their own connection implementation, for example to use a different
-Bluetooth implementation.
+their own connection implementation, for example to use a Bluetooth
+implementation.
 
 .. automodule:: carreralib.connection
    :members:
@@ -139,7 +123,3 @@ DIGITAL 124/132 protocol.
 
 
 .. autofunction:: chksum
-
-
-.. _bluepy: https://github.com/IanHarvey/bluepy
-.. _pyserial: http://pythonhosted.org/pyserial/
