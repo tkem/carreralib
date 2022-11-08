@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import argparse
 import contextlib
 import curses
@@ -17,27 +15,31 @@ def posgetter(driver):
 
 def formattime(time, longfmt=False):
     if time is None:
-        return 'n/a'
+        return "n/a"
     s = time // 1000
     ms = time % 1000
 
     if not longfmt:
-        return '%d.%03d' % (s, ms)
+        return "%d.%03d" % (s, ms)
     elif s < 3600:
-        return '%d:%02d.%03d' % (s // 60, s % 60, ms)
+        return "%d:%02d.%03d" % (s // 60, s % 60, ms)
     else:
-        return '%d:%02d:%02d.%03d' % (s // 3600, (s // 60) % 60, s % 60, ms)
+        return "%d:%02d:%02d.%03d" % (s // 3600, (s // 60) % 60, s % 60, ms)
 
 
 class RMS(object):
 
-    HEADER = 'Pos No         Time  Lap time  Best lap Laps Pit Fuel'
-    FORMAT1 = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
-               '{laps:>5}{pits:>4}{fuel:>5.0%}')
-    FORMAT2 = ('{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}' +
-               '{laps:>5} n/a  n/a')
-    FOOTER1 = ' * * * * *  SPACE to start/pause, ESC for pace car'
-    FOOTER2 = ' [R]eset, [S]peed, [B]rake, [F]uel, [C]ode, [Q]uit'
+    HEADER = "Pos No         Time  Lap time  Best lap Laps Pit Fuel"
+    FORMAT1 = "%s%s" % (
+        "{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}",
+        "{laps:>5}{pits:>4}{fuel:>5.0%}",
+    )
+    FORMAT2 = "%s%s" % (
+        "{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}",
+        "{laps:>5} n/a  n/a",
+    )
+    FOOTER1 = " * * * * *  SPACE to start/pause, ESC for pace car"
+    FOOTER2 = " [R]eset, [S]peed, [B]rake, [F]uel, [C]ode, [Q]uit"
 
     # CU reports zero fuel for all cars unless pit lane adapter is connected
     # FUEL_MASK = ControlUnit.Status.FUEL_MODE | ControlUnit.Status.REAL_MODE
@@ -90,21 +92,21 @@ class RMS(object):
             try:
                 self.update()
                 c = self.window.getch()
-                if c == ord('q'):
+                if c == ord("q"):
                     break
-                elif c == ord('r'):
+                elif c == ord("r"):
                     self.reset()
-                elif c == ord(' '):
+                elif c == ord(" "):
                     self.cu.start()
-                elif (c == 27):  # ESC
+                elif c == 27:  # ESC
                     self.cu.request(ControlUnit.PACE_CAR_KEY)
-                elif c == ord('s'):
+                elif c == ord("s"):
                     self.cu.request(ControlUnit.SPEED_KEY)
-                elif c == ord('b'):
+                elif c == ord("b"):
                     self.cu.request(ControlUnit.BRAKE_KEY)
-                elif c == ord('f'):
+                elif c == ord("f"):
                     self.cu.request(ControlUnit.FUEL_KEY)
-                elif c == ord('c'):
+                elif c == ord("c"):
                     self.cu.request(ControlUnit.CODE_KEY)
                 data = self.cu.request()
                 # prevent counting duplicate laps
@@ -115,7 +117,7 @@ class RMS(object):
                 elif isinstance(data, ControlUnit.Timer):
                     self.handle_timer(data)
                 else:
-                    logging.warn('Unknown data from CU: ' + data)
+                    logging.warn("Unknown data from CU: " + data)
                 last = data
             except select.error:
                 pass
@@ -166,47 +168,56 @@ class RMS(object):
                 leader = driver
                 t = formattime(driver.time - self.start, True)
             elif driver.laps == leader.laps:
-                t = '+%ss' % formattime(driver.time - leader.time)
+                t = "+%ss" % formattime(driver.time - leader.time)
             else:
                 gap = leader.laps - driver.laps
-                t = '+%d Lap%s' % (gap, 's' if gap != 1 else '')
+                t = "+%d Lap%s" % (gap, "s" if gap != 1 else "")
             if (self.status.mode & self.FUEL_MASK) != 0:
                 text = self.FORMAT1.format(
-                    pos=pos, car=driver.num, time=t, laps=driver.laps,
+                    pos=pos,
+                    car=driver.num,
+                    time=t,
+                    laps=driver.laps,
                     laptime=formattime(driver.laptime),
                     bestlap=formattime(driver.bestlap),
-                    fuel=driver.fuel/15.0,
-                    pits=driver.pits
+                    fuel=driver.fuel / 15.0,
+                    pits=driver.pits,
                 )
             else:
                 text = self.FORMAT2.format(
-                    pos=pos, car=driver.num, time=t, laps=driver.laps,
+                    pos=pos,
+                    car=driver.num,
+                    time=t,
+                    laps=driver.laps,
                     laptime=formattime(driver.laptime),
-                    bestlap=formattime(driver.bestlap)
+                    bestlap=formattime(driver.bestlap),
                 )
             window.addnstr(pos, 0, text, ncols)
         window.refresh()
 
 
-parser = argparse.ArgumentParser(prog='python -m carreralib')
-parser.add_argument('device', metavar='DEVICE')
-parser.add_argument('-l', '--logfile', default='carreralib.log')
-parser.add_argument('-t', '--timeout', default=1.0, type=float)
-parser.add_argument('-v', '--verbose', action='store_true')
+parser = argparse.ArgumentParser(prog="python -m carreralib")
+parser.add_argument("device", metavar="DEVICE")
+parser.add_argument("-l", "--logfile", default="carreralib.log")
+parser.add_argument("-t", "--timeout", default=1.0, type=float)
+parser.add_argument("-v", "--verbose", action="store_true")
 args = parser.parse_args()
 
-logging.basicConfig(level=logging.DEBUG if args.verbose else logging.WARN,
-                    filename=args.logfile,
-                    format='%(asctime)s: %(message)s')
+logging.basicConfig(
+    level=logging.DEBUG if args.verbose else logging.WARN,
+    filename=args.logfile,
+    format="%(asctime)s: %(message)s",
+)
 
 with contextlib.closing(ControlUnit(args.device, timeout=args.timeout)) as cu:
-    print('CU version %s' % cu.version())
+    print("CU version %s" % cu.version())
 
     def run(win):
         curses.curs_set(0)
         curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
         rms = RMS(cu, win)
         rms.run()
+
     try:
         curses.wrapper(run)
     except KeyboardInterrupt:

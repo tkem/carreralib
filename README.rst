@@ -5,21 +5,26 @@ carreralib
    :target: https://pypi.org/project/carreralib/
    :alt: Latest PyPI version
 
+.. image:: https://img.shields.io/github/workflow/status/tkem/carreralib/CI
+   :target: https://github.com/tkem/carreralib/actions/workflows/ci.yml
+   :alt: CI build status
+
 .. image:: https://img.shields.io/readthedocs/carreralib
    :target: http://carreralib.readthedocs.io/
    :alt: Documentation build status
 
-.. image:: http://img.shields.io/travis/tkem/carreralib
-   :target: https://travis-ci.org/tkem/carreralib/
-   :alt: Travis CI build status
-
-.. image:: http://img.shields.io/coveralls/tkem/carreralib
-   :target: https://coveralls.io/r/tkem/carreralib
+.. image:: https://img.shields.io/codecov/c/github/tkem/carreralib/master.svg
+   :target: https://codecov.io/gh/tkem/carreralib
    :alt: Test coverage
 
-.. image:: https://img.shields.io/github/license/tkem/carreralib
-   :target: http://raw.github.com/tkem/carreralib/master/LICENSE
+.. image:: https://img.shields.io/github/license/tkem/cachetools
+   :target: https://raw.github.com/tkem/cachetools/master/LICENSE
    :alt: License
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
+   :alt: Code style: black
+
 
 This module provides a Python interface to Carrera(R) DIGITAL 124/132
 slotcar systems connected via serial port or Bluetooth.
@@ -76,12 +81,12 @@ Project Resources
 License
 ------------------------------------------------------------------------
 
-Copyright (c) 2015-2020 Thomas Kemmer.
+Copyright (c) 2015-2022 Thomas Kemmer.
 
 Licensed under the `MIT License`_.
 
-Carrera and Carrera AppConnect are registered trademarks of Stadlbauer
-Marketing + Vertrieb GmbH.
+Carrera and Carrera AppConnect are registered trademarks of Carrera
+Toys GmbH.
 
 Thanks to Stephan Heß (a.k.a. slotbaer_) for doing all the hard work.
 

@@ -1,24 +1,30 @@
+import pathlib
+import sys
+
+basedir = pathlib.Path(__file__).parent.parent
+
+sys.path.insert(0, str((basedir / "src").resolve()))
+
+
 def get_version():
     import configparser
-    import pathlib
 
     cp = configparser.ConfigParser()
-    # Python 3.5 ConfigParser does not accept Path as filename
-    cp.read(str(pathlib.Path(__file__).parent.parent / "setup.cfg"))
+    cp.read(basedir / "setup.cfg")
     return cp["metadata"]["version"]
 
 
-project = 'carreralib'
-copyright = '2015-2020 Thomas Kemmer'
+project = "carreralib"
+copyright = "2015-2022 Thomas Kemmer"
 version = get_version()
 release = version
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.coverage',
-    'sphinx.ext.doctest',
-    'sphinx.ext.todo'
+    "sphinx.ext.autodoc",
+    "sphinx.ext.coverage",
+    "sphinx.ext.doctest",
+    "sphinx.ext.todo",
 ]
-exclude_patterns = ['_build']
-master_doc = 'index'
-html_theme = 'default'
+exclude_patterns = ["_build"]
+master_doc = "index"
+html_theme = "default"

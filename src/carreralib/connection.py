@@ -1,18 +1,18 @@
-from __future__ import absolute_import, division, unicode_literals
-
-
 class ConnectionError(Exception):
     """The base class of all connection exceptions."""
+
     pass
 
 
 class BufferTooShort(ConnectionError):
     """Raised when the supplied buffer is too small a message."""
+
     pass
 
 
 class TimeoutError(ConnectionError):
     """Raised when a timeout expires."""
+
     pass
 
 
@@ -42,9 +42,11 @@ class Connection(object):
 
 def open(device, **kwargs):
     """Open a connection to the given device."""
-    if len(device.split(':')) == 6:
+    if len(device.split(":")) == 6:
         from .bluepy import BluepyConnection
+
         return BluepyConnection(device, **kwargs)
     else:
         from .serial import SerialConnection
+
         return SerialConnection(device, **kwargs)
