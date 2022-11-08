@@ -146,7 +146,7 @@ class RMS(object):
 
     def update(self, blink=lambda: (time.time() * 2) % 2 == 0):
         window = self.window
-        window.clear()
+        window.erase()
         nlines, ncols = window.getmaxyx()
         window.addnstr(0, 0, self.HEADER.ljust(ncols), ncols, self.titleattr)
         window.addnstr(nlines - 2, 0, self.FOOTER1, ncols - 1)
