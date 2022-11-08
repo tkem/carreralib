@@ -1,3 +1,13 @@
+0.8.0 UNRELEASED
+----------------
+
+- Require Python 3.7 or later.
+
+- Drop ``bluepy`` support.
+
+- Prevent screen flicker in demo RMS.
+
+
 0.7.0 2020-06-14
 ----------------
 
