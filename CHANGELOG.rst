@@ -1,3 +1,11 @@
+0.9.0 UNRELEASED
+----------------
+
+- Add firmware update functions.
+
+- Return CU version as a string.
+
+
 0.8.0 2022-11-08
 ----------------
 
