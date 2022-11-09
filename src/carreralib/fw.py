@@ -22,7 +22,7 @@ if __name__ == "__main__":
     )
 
     with contextlib.closing(ControlUnit(args.device, timeout=args.timeout)) as cu:
-        print("CU version %s" % cu.version().decode())
+        print("CU version %s" % cu.version())
 
         if args.file:
             with open(args.file) as f:
@@ -40,4 +40,4 @@ if __name__ == "__main__":
                     # print progress
                     print("Writing firmware update block %d/%d" % (n + 1, len(lines)))
                 time.sleep(1.0)  # wait some more...
-                print("CU version %s" % cu.version().decode())
+                print("CU version %s" % cu.version())

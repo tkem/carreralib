@@ -195,10 +195,10 @@ class ControlUnit(object):
         self.request(self.START_KEY)
 
     def version(self):
-        """Retrieve the CU version."""
+        """Retrieve the CU version as a string."""
         res = self.request(b"0")
         if res:
-            return protocol.unpack("x4sC", res)[0]
+            return protocol.unpack("x4sC", res)[0].decode()
         else:
             return None  # TODO: raise here?
 
