@@ -1,4 +1,4 @@
-0.9.0 UNRELEASED
+0.9.0 2022-11-09
 ----------------
 
 - Add firmware update functions.
