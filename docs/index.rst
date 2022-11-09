@@ -45,6 +45,31 @@ Within the RMS, use the space key to start or pause a race, ``R`` to
 reset a race, and ``Q`` to quit.
 
 
+Control Unit Firmware
+------------------------------------------------------------------------
+
+To show the current firmware version of your Control Unit, use::
+
+  python -m carreralib.fw /dev/ttyUSB0
+
+.. note::
+
+  Trying to update the firmware of your Control Unit is a potentially
+  dangerous operation that may wreck your hardware.  Use at your own
+  risk!
+
+To upgrade (or downgrade) your Control Unit's firmware, given an ASCII
+firmware file, use::
+
+  python -m carreralib.fw /dev/ttyUSB0 digital_blackbox_NF_V337.HMF 
+
+.. note::
+
+  Control Unit firmware are the intellectual property of Carrera Toys
+  GmbH, and are only provided by the copyright holders.  Please do
+  *not* ask for firmware files here!
+
+
 API
 ------------------------------------------------------------------------
 
