@@ -4,12 +4,16 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   main:
-    name: Python ${{ matrix.python }}
-    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         python: ["3.7", "3.8", "3.9", "3.10", "3.11", "pypy-3.7", "pypy-3.8"]
+        include:
+          - os: windows-latest
+            python: "3.11"
+    name: Python ${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -19,4 +23,4 @@ jobs:
       - run: python -m tox
       - uses: codecov/codecov-action@v3
         with:
-          name: ${{ matrix.python }}
+          name: ${{ matrix.python }} on ${{ matrix.os }}
