@@ -40,3 +40,9 @@ class SerialConnection(Connection):
         self.__serial.write(buf[offset : offset + size])
         self.__serial.write(b"$")
         self.__serial.flush()
+
+    @classmethod
+    def scan(_):
+        from serial.tools.list_ports import comports
+
+        return ((info.device, info.description) for info in comports())

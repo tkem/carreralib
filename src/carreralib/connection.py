@@ -45,3 +45,10 @@ def open(device, **kwargs):
     from .serial import SerialConnection
 
     return SerialConnection(device, **kwargs)
+
+
+def scan():
+    """Search for potential devices."""
+    from .serial import SerialConnection
+
+    return SerialConnection.scan()

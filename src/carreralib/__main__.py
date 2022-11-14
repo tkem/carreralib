@@ -197,10 +197,25 @@ class RMS(object):
 
 
 parser = argparse.ArgumentParser(prog="python -m carreralib")
-parser.add_argument("device", metavar="DEVICE")
-parser.add_argument("-l", "--logfile", default="carreralib.log")
-parser.add_argument("-t", "--timeout", default=1.0, type=float)
-parser.add_argument("-v", "--verbose", action="store_true")
+parser.add_argument(
+    "device",
+    metavar="DEVICE",
+    nargs="?",
+    help="the Control Unit device, e.g. a serial port or MAC address",
+)
+parser.add_argument(
+    "-l", "--logfile", default="carreralib.log", help="where to write log messages"
+)
+parser.add_argument(
+    "-t",
+    "--timeout",
+    default=1.0,
+    type=float,
+    help="maximum time in seconds to wait for Control Unit",
+)
+parser.add_argument(
+    "-v", "--verbose", action="store_true", help="write more log messages"
+)
 args = parser.parse_args()
 
 logging.basicConfig(
@@ -208,6 +223,19 @@ logging.basicConfig(
     filename=args.logfile,
     format="%(asctime)s: %(message)s",
 )
+
+if args.device is None:
+    from . import connection
+
+    parser.print_help()
+    print("\ndevices:")
+    nfound = 0
+    for device, info in connection.scan():
+        print("  %s\t%s" % (device, info))
+        nfound += 1
+    if not nfound:
+        print("  none found")
+    quit()
 
 with contextlib.closing(ControlUnit(args.device, timeout=args.timeout)) as cu:
     print("CU version %s" % cu.version())
