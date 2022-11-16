@@ -204,8 +204,12 @@ class ControlUnit(object):
 
     def fwu_start(self):
         """Initiate a CU firmware update."""
+        # G: start update, B: control unit
         self.request(protocol.pack("ccC", b"G", b"B"))
 
     def fwu_write(self, data):
         """Write CU firmware update data."""
+        # TODO: with BLE, data is split into chunks of max. 18 bytes,
+        # chunks are preceded by 'F', and EOL is written as a
+        # seperate, empty 'E' command...
         self.request(protocol.pack(f"c{len(data)}sC", b"E", data))
