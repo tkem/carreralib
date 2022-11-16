@@ -9,7 +9,7 @@ slotcar systems connected via the serial port.
 .. code-block:: pycon
 
    >>> from carreralib import ControlUnit
-   >>> cu = ControlUnit('/dev/ttyUSB0')
+   >>> cu = ControlUnit('/dev/ttyUSB0')  # or something like 'COM3' on Windows
    >>> cu.version()
    b'5331'
    >>> cu.request()
@@ -35,11 +35,31 @@ For demonstration purposes, the :mod:`carreralib` module can be used
 from the command line to run a simple curses-based race management
 system (RMS)::
 
-  python -m carreralib /dev/ttyUSB0
+  python3 -m carreralib /dev/ttyUSB0
 
 .. image:: rms.png
     :width: 569
     :height: 182
+
+When called without a device name or path, this will list command line
+options and serial devices that a Control Unit may be connected to::
+
+  $ python3 -m carreralib
+  usage: python -m carreralib [-h] [-l LOGFILE] [-t TIMEOUT] [-v] [DEVICE]
+
+  positional arguments:
+    DEVICE                the Control Unit device, e.g. a serial port or MAC address
+
+  options:
+    -h, --help            show this help message and exit
+    -l LOGFILE, --logfile LOGFILE
+                          where to write log messages
+    -t TIMEOUT, --timeout TIMEOUT
+                          maximum time in seconds to wait for Control Unit
+    -v, --verbose         write more log messages
+
+  devices:
+    /dev/ttyUSB0	USB-Serial Controller
 
 Within the RMS, use the space key to start or pause a race, ``R`` to
 reset a race, and ``Q`` to quit.
@@ -50,7 +70,7 @@ Control Unit Firmware
 
 To show the current firmware version of your Control Unit, use::
 
-  python -m carreralib.fw /dev/ttyUSB0
+  python3 -m carreralib.fw /dev/ttyUSB0
 
 .. note::
 
@@ -61,7 +81,7 @@ To show the current firmware version of your Control Unit, use::
 To upgrade (or downgrade) your Control Unit's firmware, given an ASCII
 firmware file, use::
 
-  python -m carreralib.fw /dev/ttyUSB0 digital_blackbox_NF_V337.HMF 
+  python3 -m carreralib.fw /dev/ttyUSB0 digital_blackbox_NF_V337.HMF 
 
 .. note::
 
