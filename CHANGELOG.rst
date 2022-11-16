@@ -1,3 +1,13 @@
+0.9.1 2022-11-16
+----------------
+
+- Use ``windows-curses`` on Windows platforms.
+  
+- List serial devices with RMS command-line options.
+
+- Improve documentation.
+
+
 0.9.0 2022-11-09
 ----------------
 
