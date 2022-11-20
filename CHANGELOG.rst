@@ -1,8 +1,16 @@
+0.9.2 UNRELEASED
+----------------
+
+- Fix ``SerialConnection.close()`` with invalid device.
+
+- Improve firmware option and error handling.
+
+
 0.9.1 2022-11-16
 ----------------
 
 - Use ``windows-curses`` on Windows platforms.
-  
+
 - List serial devices with RMS command-line options.
 
 - Improve documentation.
