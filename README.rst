@@ -88,7 +88,7 @@ Thanks to Stephan Heß (a.k.a. slotbaer_) for doing all the hard work.
 .. _Documentation: http://carreralib.readthedocs.io/en/latest/
 .. _Issue Tracker: https://github.com/tkem/carreralib/issues/
 .. _Source Code: https://github.com/tkem/carreralib/
-.. _Change Log: https://github.com/tkem/carreralib/blob/master/CHANGES.rst
+.. _Change Log: https://github.com/tkem/carreralib/blob/master/CHANGELOG.rst
 .. _MIT License: http://raw.github.com/tkem/carreralib/master/LICENSE
 
 .. _slotbaer: http://www.slotbaer.de/
