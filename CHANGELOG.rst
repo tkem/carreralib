@@ -1,4 +1,4 @@
-0.9.2 UNRELEASED
+0.9.2 2022-11-20
 ----------------
 
 - Fix ``SerialConnection.close()`` with invalid device.
