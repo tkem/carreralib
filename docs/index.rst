@@ -41,8 +41,12 @@ system (RMS)::
     :width: 569
     :height: 182
 
+Within the RMS, use the space key to start or pause a race, ``R`` to
+reset a race, and ``Q`` to quit.
+
 When called without a device name or path, this will list command line
-options and serial devices that a Control Unit may be connected to::
+options and the serial or Bluetooth devices that a Control Unit may be
+connected to, e.g. on Linux::
 
   $ python3 -m carreralib
   usage: python -m carreralib [-h] [-l LOGFILE] [-t TIMEOUT] [-v] [DEVICE]
@@ -61,8 +65,20 @@ options and serial devices that a Control Unit may be connected to::
   devices:
     /dev/ttyUSB0	USB-Serial Controller
 
-Within the RMS, use the space key to start or pause a race, ``R`` to
-reset a race, and ``Q`` to quit.
+On Windows, this will show the respective COM port::
+
+  devices:
+    COM3                Prolific USB-to-Serial Comm Port (COM3)
+
+If a Carrera AppConnect® Bluetooth device is found, this will show the
+Bluetooth MAC address of the device instead::
+
+  devices:
+    C6:34:FA:1D:1D:5D   Control_Unit
+
+So instead of ``/dev/ttyUSB0``, specify the respective COM port on
+Windows, or the Bluetooth MAC address (e.g. ``C6:34:FA:1D:1D:5D``)
+when using Carrera AppConnect®.
 
 
 Control Unit Firmware

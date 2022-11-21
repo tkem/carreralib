@@ -23,6 +23,9 @@ class Connection(object):
     def __init__(self, device, **kwargs):
         pass
 
+    def __del__(self):
+        self.close()
+
     def close(self):
         """Close the connection."""
         pass
@@ -42,13 +45,20 @@ class Connection(object):
 
 def open(device, **kwargs):
     """Open a connection to the given device."""
-    from .serial import SerialConnection
+    if len(device.split(":")) == 6:
+        from .ble import BLEConnection
 
-    return SerialConnection(device, **kwargs)
+        return BLEConnection(device, **kwargs)
+    else:
+        from .serial import SerialConnection
+
+        return SerialConnection(device, **kwargs)
 
 
 def scan():
     """Search for potential devices."""
+    from itertools import chain
+    from .ble import BLEConnection
     from .serial import SerialConnection
 
-    return SerialConnection.scan()
+    return chain(SerialConnection.scan(), BLEConnection.scan())

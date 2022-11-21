@@ -26,8 +26,9 @@ carreralib
    :alt: Code style: black
 
 
-This module provides a Python interface to Carrera(R) DIGITAL 124/132
-slotcar systems connected via a serial (cable) connection.
+This module provides a Python interface to Carrera® DIGITAL 124/132
+slotcar systems connected via a serial (cable) connection, or via
+Bluetooth LE using Carrera AppConnect®.
 
 .. code-block:: pycon
 
@@ -80,7 +81,11 @@ Copyright (c) 2015-2022 Thomas Kemmer.
 
 Licensed under the `MIT License`_.
 
-Carrera is a registered trademark of Carrera Toys GmbH.
+Carrera® and Carrera AppConnect® are registered trademarks of Carrera
+Toys GmbH.
+
+``carreralib`` is not an official Carrera® product, and is not
+affiliated with or endorsed by Carrera Toys GmbH.
 
 Thanks to Stephan Heß (a.k.a. slotbaer_) for doing all the hard work.
 
