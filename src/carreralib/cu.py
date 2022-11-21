@@ -67,23 +67,23 @@ class ControlUnit(object):
 
         pass
 
-    PACE_CAR_KEY = b"T1"
-    """Request for emulating the Control Unit's PACE CAR/ESC key."""
+    PACE_CAR_ESC_BUTTON_ID = 1
+    """The Control Unit's PACE CAR/ESC button ID."""
 
-    START_KEY = b"T2"
-    """Request for emulating the Control Unit's START/ENTER key."""
+    START_ENTER_BUTTON_ID = 2
+    """The Control Unit's START/ENTER button ID."""
 
-    SPEED_KEY = b"T5"
-    """Request for emulating the Control Unit's SPEED key."""
+    SPEED_BUTTON_ID = 5
+    """The Control Unit's SPEED button ID."""
 
-    BRAKE_KEY = b"T6"
-    """Request for emulating the Control Unit's BRAKE key."""
+    BRAKE_BUTTON_ID = 6
+    """The Control Unit's BRAKE button ID."""
 
-    FUEL_KEY = b"T7"
-    """Request for emulating the Control Unit's FUEL key."""
+    FUEL_BUTTON_ID = 7
+    """The Control Unit's FUEL button ID."""
 
-    CODE_KEY = b"T8"
-    """Request for emulating the Control Unit's CODE key."""
+    CODE_BUTTON_ID = 8
+    """The Control Unit's CODE button ID."""
 
     def __init__(self, device, **kwargs):
         if isinstance(device, connection.Connection):
@@ -129,6 +129,10 @@ class ControlUnit(object):
             return ControlUnit.Timer(address - 1, timestamp, sector)
         else:
             return None  # TODO: raise?
+
+    def press(self, button_id):
+        """Simulate pressing the CU button with the given ID."""
+        return self.request(protocol.pack("cY", b"T", button_id))
 
     def request(self, buf, maxlength=None):
         """Send a message to the CU and wait for a response."""
@@ -197,7 +201,7 @@ class ControlUnit(object):
 
     def start(self):
         """Initiate the CU start sequence."""
-        self.request(self.START_KEY)
+        self.press(self.START_ENTER_BUTTON_ID)
 
     def version(self):
         """Retrieve the CU version as a string."""

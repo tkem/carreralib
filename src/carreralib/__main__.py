@@ -99,15 +99,15 @@ class RMS(object):
                 elif c == ord(" "):
                     self.cu.start()
                 elif c == 27:  # ESC
-                    self.cu.request(ControlUnit.PACE_CAR_KEY)
+                    self.cu.press(ControlUnit.PACE_CAR_ESC_BUTTON_ID)
                 elif c == ord("s"):
-                    self.cu.request(ControlUnit.SPEED_KEY)
+                    self.cu.press(ControlUnit.SPEED_BUTTON_ID)
                 elif c == ord("b"):
-                    self.cu.request(ControlUnit.BRAKE_KEY)
+                    self.cu.press(ControlUnit.BRAKE_BUTTON_ID)
                 elif c == ord("f"):
-                    self.cu.request(ControlUnit.FUEL_KEY)
+                    self.cu.press(ControlUnit.FUEL_BUTTON_ID)
                 elif c == ord("c"):
-                    self.cu.request(ControlUnit.CODE_KEY)
+                    self.cu.press(ControlUnit.CODE_BUTTON_ID)
                 data = self.cu.poll()
                 # prevent counting duplicate laps
                 if data == last:
