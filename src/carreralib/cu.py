@@ -106,26 +106,15 @@ class ControlUnit(object):
         """Ignore the controllers represented by bitmask `mask`."""
         self.request(protocol.pack("cBC", b":", mask))
 
-    def request(self, buf=b"?", maxlength=None):
-        """Send a message to the CU and wait for a response.
+    def poll(self):
+        """Poll the CU for pending messages.
 
         The returned value will be an instance of either
         :class:`ControlUnit.Timer` or :class:`ControlUnit.Status`,
         depending on whether any timer events are pending.
 
         """
-        logger.debug("Sending message %r", buf)
-        self.__connection.send(buf)
-        while True:
-            res = self.__connection.recv(maxlength)
-            if not res:
-                logger.warn("Received unknown command response")
-                break
-            elif res.startswith(buf[0:1]):
-                break
-            else:
-                logger.warn("Received unexpected message %r", res)
-        logger.debug("Received message %r", res)
+        res = self.request(b"?")
         if res.startswith(b"?:"):
             # recent CU versions report two extra unknown bytes with '?:'
             try:
@@ -139,7 +128,23 @@ class ControlUnit(object):
             address, timestamp, sector = protocol.unpack("xYIYC", res)
             return ControlUnit.Timer(address - 1, timestamp, sector)
         else:
-            return res
+            return None  # TODO: raise?
+
+    def request(self, buf, maxlength=None):
+        """Send a message to the CU and wait for a response."""
+        logger.debug("Sending message %r", buf)
+        self.__connection.send(buf)
+        while True:
+            res = self.__connection.recv(maxlength)
+            if not res:
+                logger.warn("Received unknown command response")
+                break
+            elif res.startswith(buf[0:1]):
+                break
+            else:
+                logger.warn("Received unexpected message %r", res)
+        logger.debug("Received message %r", res)
+        return res
 
     def reset(self):
         """Reset the CU timer."""

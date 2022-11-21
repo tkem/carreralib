@@ -76,9 +76,9 @@ class RMS(object):
         self.maxlaps = 0
         self.start = None
         # discard remaining timer messages
-        status = self.cu.request()
+        status = self.cu.poll()
         while not isinstance(status, ControlUnit.Status):
-            status = self.cu.request()
+            status = self.cu.poll()
         self.status = status
         # reset cu timer
         self.cu.reset()
@@ -108,7 +108,7 @@ class RMS(object):
                     self.cu.request(ControlUnit.FUEL_KEY)
                 elif c == ord("c"):
                     self.cu.request(ControlUnit.CODE_KEY)
-                data = self.cu.request()
+                data = self.cu.poll()
                 # prevent counting duplicate laps
                 if data == last:
                     continue
