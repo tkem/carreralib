@@ -34,21 +34,21 @@ slotcar systems connected via a serial (cable) connection.
    >>> from carreralib import ControlUnit
    >>> cu = ControlUnit('/dev/ttyUSB0')
    >>> cu.version()
-   b'5331'
-   >>> cu.request()
-   Status(fuel=(15, 15, 15, 15, 15, 15, 0, 0), start=0, mode=6,
+   '5337'
+   >>> cu.poll()
+   Status(fuel=(14, 14, 14, 14, 14, 14, 0, 0), start=0, mode=6,
           pit=(False, False, False, False, False, False, False, False),
           display=8)
    >>> cu.start()
-   >>> cu.request()
-   Status(fuel=(15, 15, 15, 15, 15, 15, 0, 0), start=1, mode=6,
+   >>> cu.poll()
+   Status(fuel=(14, 14, 14, 14, 14, 14, 0, 0), start=1, mode=6,
           pit=(False, False, False, False, False, False, False, False),
           display=8)
    >>> cu.start()
-   >>> cu.request()
-   Timer(address=1, timestamp=243019, sector=1)
-   >>> cu.request()
-   Timer(address=0, timestamp=245704, sector=1)
+   >>> cu.poll()
+   Timer(address=1, timestamp=105295, sector=1)
+   >>> cu.poll()
+   Timer(address=0, timestamp=105410, sector=1)
 
 For demonstration purposes, the ``carreralib`` module can also be used
 from the command line as a simple race management system (RMS).
