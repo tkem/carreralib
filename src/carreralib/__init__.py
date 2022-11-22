@@ -6,4 +6,4 @@ from .cu import ControlUnit
 
 __all__ = ("ControlUnit", "connection", "protocol")
 
-__version__ = "0.9.2"
+__version__ = "0.10.0"

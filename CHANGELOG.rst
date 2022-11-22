@@ -1,3 +1,11 @@
+0.10.0 2022-11-22
+-----------------
+
+- Add ControlUnit.poll() method.
+
+- Add ControlUnit.press() method and button IDs.
+
+
 0.9.2 2022-11-20
 ----------------
 
