@@ -21,9 +21,6 @@ if __name__ == "__main__":
         help="a Control Unit firmware update file",
     )
     parser.add_argument(
-        "-f", "--force", action="store_true", help="force firmware update"
-    )
-    parser.add_argument(
         "-l", "--logfile", default="carreralib.log", help="where to write log messages"
     )
     parser.add_argument(
@@ -45,9 +42,6 @@ if __name__ == "__main__":
     )
 
     with contextlib.closing(ControlUnit(args.device, timeout=args.timeout)) as cu:
-        if not args.file or not args.force:
-            print("CU version %s" % cu.version())
-
         if args.file:
             with open(args.file) as f:
                 # remove double quotes wrapping each line
@@ -64,3 +58,5 @@ if __name__ == "__main__":
                     # print progress
                     print("Writing firmware update block %d/%d" % (n + 1, len(lines)))
                 print("Firmware update done")
+        else:
+            print("CU version %s" % cu.version())
