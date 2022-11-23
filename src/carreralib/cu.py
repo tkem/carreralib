@@ -152,7 +152,7 @@ class ControlUnit(object):
 
     def reset(self):
         """Reset the CU timer."""
-        self.request(protocol.pack('cYYC', b'=', 1, 0))
+        self.request(protocol.pack("cYYC", b"=", 1, 0))
 
     def setbrake(self, address, value):
         """Set the brake value for controller `address`."""
