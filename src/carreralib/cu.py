@@ -132,7 +132,7 @@ class ControlUnit(object):
 
     def press(self, button_id):
         """Simulate pressing the CU button with the given ID."""
-        return self.request(protocol.pack("cY", b"T", button_id))
+        return self.request(protocol.pack("cYC", b"T", button_id))
 
     def request(self, buf, maxlength=None):
         """Send a message to the CU and wait for a response."""
@@ -152,7 +152,7 @@ class ControlUnit(object):
 
     def reset(self):
         """Reset the CU timer."""
-        self.request(b"=10")
+        self.request(protocol.pack('cYYC', b'=', 1, 0))
 
     def setbrake(self, address, value):
         """Set the brake value for controller `address`."""
