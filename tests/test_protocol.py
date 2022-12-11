@@ -26,6 +26,7 @@ class ProtocolTest(unittest.TestCase):
         for fmt, args, res in (
             ("cBYYC", [b"J", 6, 9, 1], b"J60910"),
             ("cBYYC", [b"J", 6 | (5 << 5), 4, 1], b"J6:415"),
+            ("rr3r", [0, 1, 255, 255, 255], b"\0\1\xff\xff\xff"),
         ):
             self.assertEqual(pack(fmt, *args), res)
 
@@ -38,5 +39,6 @@ class ProtocolTest(unittest.TestCase):
             ("cYIYC", b"?20030:9211<", (b"?", 2, 236050, 1)),
             ("cYIYC", b"?200301<?618", (b"?", 2, 246127, 1)),
             ("x8YC", b":01234500?", (0, 1, 2, 3, 4, 5, 0, 0)),
+            ("rr3r", b"\0\1\xff\xff\xff", (0, 1, 255, 255, 255)),
         ):
             self.assertEqual(unpack(fmt, buf), res)

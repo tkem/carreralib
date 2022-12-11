@@ -105,6 +105,14 @@ def _pack_I(buf, args, count, base=ord("0")):
         buf.append(base + ((arg >> 4) & 0xF))
 
 
+def _pack_r(buf, args, count):
+    for _ in range(count):
+        arg = next(args)
+        if arg < 0 or arg > 0xFF:
+            raise ValueError("'r' format argument out of range")
+        buf.append(arg)
+
+
 def _pack_s(buf, args, count, base=ord("0")):
     arg = next(args)
     if not isinstance(arg, bytes):
@@ -160,6 +168,12 @@ def _unpack_I(result, buf, values, offset, count):
     return count * 8
 
 
+def _unpack_r(result, buf, values, offset, count):
+    for i in range(count):
+        result.append(values[offset + i])
+    return count
+
+
 def _unpack_s(result, buf, values, offset, count):
     result.append(buf[offset : offset + count])
     return count
@@ -182,6 +196,7 @@ _PACK_FORMATS = {
     "C": _pack_C,
     "c": _pack_c,
     "I": _pack_I,
+    "r": _pack_r,
     "s": _pack_s,
     "x": _pack_x,
     "Y": _pack_Y,
@@ -192,6 +207,7 @@ _UNPACK_FORMATS = {
     "C": _unpack_C,
     "c": _unpack_c,
     "I": _unpack_I,
+    "r": _unpack_r,
     "s": _unpack_s,
     "x": _unpack_x,
     "Y": _unpack_Y,

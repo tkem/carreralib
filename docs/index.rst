@@ -97,7 +97,7 @@ To show the current firmware version of your Control Unit, use::
 To upgrade (or downgrade) your Control Unit's firmware, given an ASCII
 firmware file, use::
 
-  python3 -m carreralib.fw /dev/ttyUSB0 digital_blackbox_NF_V337.HMF 
+  python3 -m carreralib.fw /dev/ttyUSB0 digital_blackbox_NF_V337.HMF
 
 .. note::
 
@@ -151,23 +151,25 @@ DIGITAL 124/132 protocol.
    between Python values and binary protocol data.  Format strings may
    contain the following characters:
 
-   +------------+----------------------------+-------------------------------+
-   | Format     | Python type                | Value                         |
-   +============+============================+===============================+
-   | :const:`B` | :class:`int`               | unsigned byte                 |
-   +------------+----------------------------+-------------------------------+
-   | :const:`c` | :class:`bytes` of length 1 | a single ASCII character      |
-   +------------+----------------------------+-------------------------------+
-   | :const:`C` | no value                   | check sum                     |
-   +------------+----------------------------+-------------------------------+
-   | :const:`I` | :class:`int`               | 32-bit unsigned integer       |
-   +------------+----------------------------+-------------------------------+
-   | :const:`s` | :class:`bytes`             | ASCII string                  |
-   +------------+----------------------------+-------------------------------+
-   | :const:`x` | no value                   | padding/ignored               |
-   +------------+----------------------------+-------------------------------+
-   | :const:`Y` | :class:`int`               | nibble or *nybble*            |
-   +------------+----------------------------+-------------------------------+
+   +------------+----------------------------+--------------------------------+
+   | Format     | Python type                | Value                          |
+   +============+============================+================================+
+   | :const:`B` | :class:`int`               | unsigned byte                  |
+   +------------+----------------------------+--------------------------------+
+   | :const:`c` | :class:`bytes` of length 1 | a single ASCII character       |
+   +------------+----------------------------+--------------------------------+
+   | :const:`C` | no value                   | check sum                      |
+   +------------+----------------------------+--------------------------------+
+   | :const:`I` | :class:`int`               | 32-bit unsigned integer        |
+   +------------+----------------------------+--------------------------------+
+   | :const:`r` | :class:`int`               | "raw" unsigned byte (BLE only) |
+   +------------+----------------------------+--------------------------------+
+   | :const:`s` | :class:`bytes`             | ASCII string                   |
+   +------------+----------------------------+--------------------------------+
+   | :const:`x` | no value                   | padding/ignored                |
+   +------------+----------------------------+--------------------------------+
+   | :const:`Y` | :class:`int`               | nibble or *nybble*             |
+   +------------+----------------------------+------------------------------+-+
 
    As with :func:`struct.pack`, a format character may be preceded by
    an integral count.  For the :const:`s` format character, the count
