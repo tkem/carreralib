@@ -1,4 +1,4 @@
-1.0.0 UNRELEASED
+1.0.0 2022-12-11
 ----------------
 
 - Add BLE connection based on ``bleak``.
