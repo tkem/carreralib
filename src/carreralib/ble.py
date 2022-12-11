@@ -122,6 +122,8 @@ class BLEConnection(Connection):
             raise ValueError("buffer length < offset + size")
         self.__thread.send(buf[offset : offset + size], self.__timeout)
 
+    max_fwu_block_size = 18
+
     @classmethod
     def scan(_):
         from bleak import BleakScanner

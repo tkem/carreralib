@@ -218,7 +218,10 @@ class ControlUnit(object):
 
     def fwu_write(self, data):
         """Write CU firmware update data."""
-        # TODO: with BLE, data is split into chunks of max. 18 bytes,
-        # chunks are preceded by 'F', and EOL is written as a
-        # seperate, empty 'E' command...
-        self.request(protocol.pack(f"c{len(data)}sC", b"E", data))
+        if self.__connection.max_fwu_block_size is None:
+            self.request(protocol.pack(f"c{len(data)}sC", b"E", data))
+        else:
+            n = self.__connection.max_fwu_block_size
+            for block in (data[i : i + n] for i in range(0, len(data), n)):
+                self.request(protocol.pack(f"cr{len(block)}s", b"F", len(block), block))
+            self.request(protocol.pack("cC", b"E"))

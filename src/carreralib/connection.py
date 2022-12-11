@@ -42,6 +42,9 @@ class Connection(object):
         interface as a complete message."""
         raise NotImplementedError
 
+    max_fwu_block_size = None
+    """Maximum number of bytes in one firmware update frame."""
+
 
 def open(device, **kwargs):
     """Open a connection to the given device."""
