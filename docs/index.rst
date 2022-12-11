@@ -35,7 +35,7 @@ For demonstration purposes, the :mod:`carreralib` module can be used
 from the command line to run a simple curses-based race management
 system (RMS)::
 
-  python3 -m carreralib /dev/ttyUSB0
+  python -m carreralib /dev/ttyUSB0
 
 .. image:: rms.png
     :width: 569
@@ -48,7 +48,7 @@ When called without a device name or path, this will list command line
 options and the serial or Bluetooth devices that a Control Unit may be
 connected to, e.g. on Linux::
 
-  $ python3 -m carreralib
+  $ python -m carreralib
   usage: python -m carreralib [-h] [-l LOGFILE] [-t TIMEOUT] [-v] [DEVICE]
 
   positional arguments:
@@ -86,7 +86,7 @@ Control Unit Firmware
 
 To show the current firmware version of your Control Unit, use::
 
-  python3 -m carreralib.fw /dev/ttyUSB0
+  python -m carreralib.fw /dev/ttyUSB0
 
 .. note::
 
@@ -97,7 +97,7 @@ To show the current firmware version of your Control Unit, use::
 To upgrade (or downgrade) your Control Unit's firmware, given an ASCII
 firmware file, use::
 
-  python3 -m carreralib.fw /dev/ttyUSB0 digital_blackbox_NF_V337.HMF
+  python -m carreralib.fw /dev/ttyUSB0 digital_blackbox_NF_V337.HMF
 
 .. note::
 
