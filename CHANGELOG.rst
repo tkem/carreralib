@@ -1,3 +1,13 @@
+1.0.0 UNRELEASED
+----------------
+
+- Add BLE connection based on ``bleak``.
+
+- Add "raw byte" protocol format.
+
+- Implement BLE firmware update.
+
+
 0.10.1 2022-11-24
 -----------------
 
