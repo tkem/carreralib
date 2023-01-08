@@ -1,3 +1,11 @@
+1.0.1 UNRELEASED
+----------------
+
+- Improve BLE device detection on MacOS.
+
+- ``badges/shields``: Change to GitHub workflow badge routes.
+
+
 1.0.0 2022-12-11
 ----------------
 
@@ -12,7 +20,7 @@
 -----------------
 
 - Add checksum to reset and button press commands.
-  
+
 
 0.10.0 2022-11-22
 -----------------

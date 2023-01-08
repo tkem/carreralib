@@ -1,7 +1,7 @@
 project = "carreralib"
-copyright = "2015-2022 Thomas Kemmer"
-version = "1.0.0"
-release = version
+copyright = "2015-2023 Thomas Kemmer"
+version = "1.0"
+release = "1.0.1"
 
 extensions = [
     "sphinx.ext.autodoc",
