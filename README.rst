@@ -5,7 +5,7 @@ carreralib
    :target: https://pypi.org/project/carreralib/
    :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/github/workflow/status/tkem/carreralib/CI
+.. image:: https://img.shields.io/github/actions/workflow/status/tkem/carreralib/ci.yml
    :target: https://github.com/tkem/carreralib/actions/workflows/ci.yml
    :alt: CI build status
 
