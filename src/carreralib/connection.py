@@ -48,7 +48,7 @@ class Connection(object):
 
 def open(device, **kwargs):
     """Open a connection to the given device."""
-    if len(device.split(":")) == 6:
+    if len(device.split(":")) == 6 or len(device.split("-")) == 5:
         from .ble import BLEConnection
 
         return BLEConnection(device, **kwargs)
