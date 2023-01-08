@@ -1,4 +1,4 @@
-1.0.1 UNRELEASED
+1.0.1 2023-01-08
 ----------------
 
 - Improve BLE device detection on MacOS.
