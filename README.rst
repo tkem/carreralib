@@ -17,6 +17,10 @@ carreralib
    :target: https://codecov.io/gh/tkem/carreralib
    :alt: Test coverage
 
+.. image:: https://img.shields.io/librariesio/sourcerank/pypi/carreralib
+   :target: https://libraries.io/pypi/carreralib
+   :alt: Libraries.io SourceRank
+
 .. image:: https://img.shields.io/github/license/tkem/cachetools
    :target: https://raw.github.com/tkem/cachetools/master/LICENSE
    :alt: License
