@@ -1,3 +1,9 @@
+1.0.2 2023-01-15
+----------------
+
+- Create ``asyncio.Queue`` with correct event loop.
+
+
 1.0.1 2023-01-08
 ----------------
 
