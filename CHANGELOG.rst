@@ -1,3 +1,11 @@
+1.0.3 2025-01-31
+----------------
+
+- Upgrade Development Status to ``Production``.
+
+- Officially support Python 3.13.
+
+
 1.0.2 2023-01-15
 ----------------
 
