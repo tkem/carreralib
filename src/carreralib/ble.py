@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 class BleakThread(threading.Thread):
-
     STOP_DATA = b""
 
     def __init__(self, address):

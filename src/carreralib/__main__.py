@@ -28,7 +28,6 @@ def formattime(time, longfmt=False):
 
 
 class RMS(object):
-
     HEADER = "Pos No         Time  Lap time  Best lap Laps Pit Fuel"
     FORMAT1 = "%s%s" % (
         "{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}",

@@ -4,7 +4,6 @@ from .connection import BufferTooShort, Connection, TimeoutError
 
 
 class SerialConnection(Connection):
-
     __serial = None
 
     def __init__(self, url, timeout=None):

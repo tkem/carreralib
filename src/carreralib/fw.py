@@ -6,7 +6,6 @@ import time
 from . import ControlUnit
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(prog="python -m carreralib.fw")
     parser.add_argument(
         "device",
