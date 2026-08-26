@@ -3,7 +3,7 @@ import contextlib
 import curses
 import errno
 import logging
-import select
+import sys
 import time
 
 from . import ControlUnit
@@ -27,7 +27,7 @@ def formattime(time, longfmt=False):
         return "%d:%02d:%02d.%03d" % (s // 3600, (s // 60) % 60, s % 60, ms)
 
 
-class RMS(object):
+class RMS:
     HEADER = "Pos No         Time  Lap time  Best lap Laps Pit Fuel"
     FORMAT1 = "%s%s" % (
         "{pos:<4}#{car:<2}{time:>12}{laptime:>10}{bestlap:>10}",
@@ -44,7 +44,7 @@ class RMS(object):
     # FUEL_MASK = ControlUnit.Status.FUEL_MODE | ControlUnit.Status.REAL_MODE
     FUEL_MASK = ControlUnit.Status.PIT_LANE_MODE
 
-    class Driver(object):
+    class Driver:
         def __init__(self, num):
             self.num = num
             self.time = None
@@ -64,6 +64,7 @@ class RMS(object):
             self.time = timer.timestamp
 
     def __init__(self, cu, window):
+        self.logger = logging.getLogger(__name__)
         self.cu = cu
         self.window = window
         self.titleattr = curses.A_STANDOUT
@@ -116,11 +117,9 @@ class RMS(object):
                 elif isinstance(data, ControlUnit.Timer):
                     self.handle_timer(data)
                 else:
-                    logging.warn("Unknown data from CU: " + data)
+                    self.logger.warning("Unknown data from CU: " + data)
                 last = data
-            except select.error:
-                pass
-            except IOError as e:
+            except OSError as e:
                 if e.errno != errno.EINTR:
                     raise
 
@@ -218,7 +217,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 logging.basicConfig(
-    level=logging.DEBUG if args.verbose else logging.WARN,
+    level=logging.DEBUG if args.verbose else logging.WARNING,
     filename=args.logfile,
     format="%(asctime)s: %(message)s",
 )
@@ -234,7 +233,7 @@ if args.device is None:
         nfound += 1
     if not nfound:
         print("  none found")
-    quit()
+    sys.exit()
 
 with contextlib.closing(ControlUnit(args.device, timeout=args.timeout)) as cu:
     print("CU version %s" % cu.version())

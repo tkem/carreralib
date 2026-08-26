@@ -44,7 +44,7 @@ if __name__ == "__main__":
         if args.file:
             with open(args.file) as f:
                 # remove double quotes wrapping each line
-                lines = [line.rstrip().replace('"', "") for line in f.readlines()]
+                lines = [line.rstrip().replace('"', "") for line in f]
                 # skip empty lines
                 lines = [line for line in lines if len(line)]
             if lines:
@@ -58,4 +58,4 @@ if __name__ == "__main__":
                     print("Writing firmware update block %d/%d" % (n + 1, len(lines)))
                 print("Firmware update done")
         else:
-            print("CU version %s" % cu.version())
+            print("CU firmware version %s" % cu.version())

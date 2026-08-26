@@ -1,13 +1,12 @@
 import logging
 from collections import namedtuple
 
-from . import connection
-from . import protocol
+from . import connection, protocol
 
 logger = logging.getLogger(__name__)
 
 
-class ControlUnit(object):
+class ControlUnit:
     """Interface to a Carrera Digital 124/132 Control Unit."""
 
     class Status(namedtuple("Status", "fuel start mode pit display")):
@@ -65,7 +64,7 @@ class ControlUnit(object):
 
         """
 
-        pass
+        __slots__ = ()
 
     PACE_CAR_ESC_BUTTON_ID = 1
     """The Control Unit's PACE CAR/ESC button ID."""
@@ -141,12 +140,12 @@ class ControlUnit(object):
         while True:
             res = self.__connection.recv(maxlength)
             if not res:
-                logger.warn("Received unknown command response")
+                logger.warning("Received unknown command response")
                 break
             elif res.startswith(buf[0:1]):
                 break
             else:
-                logger.warn("Received unexpected message %r", res)
+                logger.warning("Received unexpected message %r", res)
         logger.debug("Received message %r", res)
         return res
 

@@ -17,18 +17,9 @@ carreralib
    :target: https://codecov.io/gh/tkem/carreralib
    :alt: Test coverage
 
-.. image:: https://img.shields.io/librariesio/sourcerank/pypi/carreralib
-   :target: https://libraries.io/pypi/carreralib
-   :alt: Libraries.io SourceRank
-
-.. image:: https://img.shields.io/github/license/tkem/cachetools
-   :target: https://raw.github.com/tkem/cachetools/master/LICENSE
+.. image:: https://img.shields.io/github/license/tkem/carreralib
+   :target: https://raw.github.com/tkem/carreralib/master/LICENSE
    :alt: License
-
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/psf/black
-   :alt: Code style: black
-
 
 This module provides a Python interface to Carrera® DIGITAL 124/132
 slotcar systems connected via a serial (cable) connection, or via
@@ -81,7 +72,7 @@ Project Resources
 License
 ------------------------------------------------------------------------
 
-Copyright (c) 2015-2023 Thomas Kemmer.
+Copyright (c) 2015-2026 Thomas Kemmer.
 
 Licensed under the `MIT License`_.
 

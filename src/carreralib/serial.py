@@ -4,14 +4,11 @@ from .connection import BufferTooShort, Connection, TimeoutError
 
 
 class SerialConnection(Connection):
-    __serial = None
-
     def __init__(self, url, timeout=None):
         self.__serial = serial_for_url(url, baudrate=19200, timeout=timeout)
 
     def close(self):
-        if self.__serial:
-            self.__serial.close()
+        self.__serial.close()
 
     def recv(self, maxlength=None):
         buf = bytearray()
@@ -45,7 +42,7 @@ class SerialConnection(Connection):
         self.__serial.flush()
 
     @classmethod
-    def scan(_):
+    def scan(cls):
         from serial.tools.list_ports import comports
 
         return ((info.device, info.description) for info in comports())

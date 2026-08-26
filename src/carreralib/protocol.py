@@ -4,13 +4,9 @@ import re
 class ProtocolError(Exception):
     """The base class of all protocol exceptions."""
 
-    pass
-
 
 class ChecksumError(Exception):
     """Raised when a checksum is wrong."""
-
-    pass
 
 
 def chksum(buf, offset=0, size=None):
@@ -116,7 +112,7 @@ def _pack_r(buf, args, count):
 def _pack_s(buf, args, count, base=ord("0")):
     arg = next(args)
     if not isinstance(arg, bytes):
-        raise ValueError("'s' format requires a bytes object")
+        raise TypeError("'s' format requires a bytes object")
     buf.extend(arg.ljust(count, base.to_bytes(1, byteorder="little"))[:count])
 
 

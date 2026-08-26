@@ -1,22 +1,16 @@
 class ConnectionError(Exception):
     """The base class of all connection exceptions."""
 
-    pass
-
 
 class BufferTooShort(ConnectionError):
     """Raised when the supplied buffer is too small a message."""
-
-    pass
 
 
 class TimeoutError(ConnectionError):
     """Raised when a timeout expires."""
 
-    pass
 
-
-class Connection(object):
+class Connection:
     """Base class for connections to a Carrera digital slotcar
     system."""
 
@@ -28,7 +22,6 @@ class Connection(object):
 
     def close(self):
         """Close the connection."""
-        pass
 
     def recv(self, maxlength=None):
         """Return a complete message of byte data sent from the other
@@ -61,6 +54,7 @@ def open(device, **kwargs):
 def scan():
     """Search for potential devices."""
     from itertools import chain
+
     from .ble import BLEConnection
     from .serial import SerialConnection
 

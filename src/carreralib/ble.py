@@ -19,9 +19,8 @@ class BleakThread(threading.Thread):
         super().__init__()
         self.__address = address
         self.__connected = threading.Event()
-        self.__loop = None
         self.__input = queue.Queue()
-        self.__output = None
+        self.__output = asyncio.Queue()
 
     def run(self):
         asyncio.run(self.main())
@@ -58,7 +57,6 @@ class BleakThread(threading.Thread):
         from bleak import BleakClient
 
         self.__loop = asyncio.get_running_loop()
-        self.__output = asyncio.Queue()
 
         async with BleakClient(self.__address) as client:
             logger.info("Connected to BLE device: %r", client)
@@ -125,7 +123,7 @@ class BLEConnection(Connection):
     max_fwu_block_size = 18
 
     @classmethod
-    def scan(_):
+    def scan(cls):
         from bleak import BleakScanner
         from bleak.exc import BleakError
 

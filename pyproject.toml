@@ -1,3 +1,58 @@
 [build-system]
-requires = ["setuptools >= 46.4.0", "wheel"]
+requires = ["setuptools >= 80", "setuptools-scm >= 8.2"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "carreralib"
+dynamic = ["version"]
+description = "Python interface to Carrera(R) DIGITAL 124/132 slotcar systems"
+authors = [
+    {name = "Thomas Kemmer", email = "tkemmer@computer.org"}
+]
+maintainers = [
+    {name = "Thomas Kemmer", email = "tkemmer@computer.org"}
+]
+readme = "README.rst"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "bleak >= 3.0",
+    "pyserial >= 3.5",
+    "windows-curses; platform_system=='Windows'"
+]
+requires-python = ">= 3.10"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/tkem/carreralib/"
+Documentation = "https://carreralib.readthedocs.io/en/stable/"
+Source = "https://github.com/tkem/carreralib/"
+Repository = "https://github.com/tkem/carreralib/"
+Issues = "https://github.com/tkem/carreralib/issues"
+Changelog = "https://github.com/tkem/carreralib/blob/master/CHANGELOG.rst"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {attr = "carreralib.__version__"}
+
+[tool.ruff.lint]
+ignore = ["B008", "UP024", "UP031"]
