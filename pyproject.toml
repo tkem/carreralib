@@ -54,5 +54,10 @@ where = ["src"]
 [tool.setuptools.dynamic]
 version = {attr = "carreralib.__version__"}
 
+[tool.pyright]
+typeCheckingMode = "standard"
+reportPossiblyUnboundVariable = "information"
+reportOptionalOperand = "warning"
+
 [tool.ruff.lint]
 ignore = ["B008", "UP024", "UP031"]
