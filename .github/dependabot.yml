@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "monthly"
     groups:
-      weekly-batch:
+      monthly-batch:
         patterns:
           - "*"
     target-branch: "develop"
