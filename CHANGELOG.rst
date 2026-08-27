@@ -1,3 +1,13 @@
+2.0.0 2026-08-27
+----------------
+
+- Require Python 3.10 or later (breaking change).
+
+- Add type stubs for public API.
+
+- Modernize code base and build environment.
+
+
 1.0.3 2025-01-31
 ----------------
 

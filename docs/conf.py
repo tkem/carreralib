@@ -1,7 +1,9 @@
+import importlib.metadata
+
 project = "carreralib"
-copyright = "2015-2023 Thomas Kemmer"
-version = "1.0"
-release = "1.0.2"
+copyright = "2015-2026 Thomas Kemmer"
+release = importlib.metadata.version(project)
+version = ".".join(release.split(".")[:2])
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -11,4 +13,5 @@ extensions = [
 ]
 exclude_patterns = ["_build"]
 master_doc = "index"
-html_theme = "default"
+html_theme = "classic"
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
